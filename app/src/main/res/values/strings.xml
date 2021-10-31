@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="Light1">Light1</string>
+    <string name="Light2">Light2</string>
+</resources>
