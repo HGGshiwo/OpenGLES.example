@@ -15,12 +15,12 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private enum Mode{OBJECT, LIGHT1, LIGHT2, CAMERA};
+    public enum Mode{OBJECT, LIGHT1, LIGHT2, CAMERA};
 
     private MySurfaceView mGLSurfaceView;
     private CardView objectSetting;
     private CardView lightSetting;
-    private Mode mode;
+    public Mode mode;
 
     private boolean isMovingRight;
     private boolean isMovingLeft;
@@ -68,13 +68,13 @@ public class MainActivity extends AppCompatActivity {
                 while (isMovingDown){
                     switch (mode){
                         case CAMERA:
-                            mGLSurfaceView.moveCameraDown();
+                            mGLSurfaceView.moveCameraBack();
                             break;
                         case LIGHT1:
                         case LIGHT2:
                             break;
                         case OBJECT:
-                            mGLSurfaceView.moveObjectDown();
+                            mGLSurfaceView.moveObjectBack();
                             break;
                     }
                     try {
@@ -86,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
                 while (isMovingUp){
                     switch (mode){
                         case CAMERA:
-                            mGLSurfaceView.moveCameraUp();
+                            mGLSurfaceView.moveCameraForward();
                             break;
                         case LIGHT1:
                         case LIGHT2:
                             break;
                         case OBJECT:
-                            mGLSurfaceView.moveObjectUp();
+                            mGLSurfaceView.moveObjectForward();
                             break;
                     }
                     try {

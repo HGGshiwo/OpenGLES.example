@@ -2,6 +2,7 @@ package com.example.myapplication;//声明包
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLES30;
 import android.opengl.GLUtils;
@@ -25,7 +26,7 @@ import com.example.myapplication.Shader.Shader;
 
 class MySurfaceView extends GLSurfaceView 
 {
-	private final float TOUCH_SCALE_FACTOR = 180.0f/320;//角度缩放比例
+	private final float TOUCH_SCALE_FACTOR = 9.0f/320;//角度缩放比例
     private SceneRenderer mRenderer;//场景渲染器    
     
     private float mPreviousY;//上次的触控位置Y坐标
@@ -54,8 +55,19 @@ class MySurfaceView extends GLSurfaceView
         case MotionEvent.ACTION_MOVE:
             float dy = y - mPreviousY;//计算触控笔Y位移
             float dx = x - mPreviousX;//计算触控笔X位移
-            mRenderer.yAngle += dx * TOUCH_SCALE_FACTOR;//设置沿y轴旋转角度
-            mRenderer.xAngle+= dy * TOUCH_SCALE_FACTOR;//设置沿x轴旋转角度
+            float yAngle = dx * TOUCH_SCALE_FACTOR;//设置沿y轴旋转角度
+            float xAngle = dy * TOUCH_SCALE_FACTOR;//设置沿x轴旋转角度
+
+            MainActivity mainActivity = (MainActivity)getContext();
+            switch (mainActivity.mode){
+                case OBJECT:
+                    rotateObjectUp(yAngle);
+                    break;
+                case CAMERA:
+                    rotateCameraRight(-xAngle);
+                    rotateCameraUp(yAngle);
+                    break;
+            }
             requestRender();//重绘画面
         }
         mPreviousY = y;//记录触控笔位置
@@ -71,34 +83,82 @@ class MySurfaceView extends GLSurfaceView
         model.translate(1,0,0);
     }
 
-    public void moveObjectUp(){
-        model.translate(0,1,0);
+    public void moveObjectForward(){
+        model.translate(0,0,1);
     }
 
-    public void moveObjectDown(){
-        model.translate(0,-1,0);
+    public void moveObjectBack(){
+        model.translate(0,0,-1);
+    }
+
+    public void rotateObjectUp(float angle){
+        model.rotate(angle,0,1,0);
     }
 
     public void moveCameraLeft(){
-	    camera.translate(-0.1f, 0,0);
+        float [] rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        camera.up[0],
+                        camera.up[1],
+                        camera.up[2],
+                        camera.front[0],
+                        camera.front[1],
+                        camera.front[2]
+                ));
+
+        camera.translate(
+                0.5f*rightDistance[0],
+                0,
+                0.5f*rightDistance[2]
+        );
     }
 
     public void moveCameraRight(){
-	    camera.translate(0.1f, 0, 0);
+	    float [] rightDistance = Model.vectorNormal(
+	            Model.getCrossProduct(
+	                    camera.up[0],
+                        camera.up[1],
+                        camera.up[2],
+                        camera.front[0],
+                        camera.front[1],
+                        camera.front[2]
+                ));
+
+	    camera.translate(
+	            -0.5f*rightDistance[0],
+                0,
+                -0.5f*rightDistance[2]
+        );
+	}
+
+    public void moveCameraForward(){
+	    float [] front = camera.front;
+	    camera.translate(0.5f*front[0],0,0.5f*front[2]);
     }
 
-    public void moveCameraUp(){
-	    camera.translate(0,0.1f,0);
+    public void moveCameraBack(){
+        float [] front = camera.front;
+	    camera.translate(-0.5f*front[0],0,-0.5f*front[2]);
     }
 
-    public void moveCameraDown(){
-	    camera.translate(0,-0.1f,0);
+    public void rotateCameraRight(float angle){
+        float [] right = Model.vectorNormal(
+                Model.getCrossProduct(
+                        camera.up[0],
+                        camera.up[1],
+                        camera.up[2],
+                        camera.front[0],
+                        camera.front[1],
+                        camera.front[2]
+                ));
+        camera.rotate(angle, right[0], right[1], right[2]);
     }
 
-	private class SceneRenderer implements GLSurfaceView.Renderer
-    {
-		float yAngle;//绕Y轴旋转的角度
-    	float xAngle; //绕X轴旋转的角度
+    public void rotateCameraUp(float angle){
+        camera.rotate(angle, 0, 1, 0);
+    }
+
+	private class SceneRenderer implements GLSurfaceView.Renderer {
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             //设置屏幕背景色RGBA
@@ -125,13 +185,6 @@ class MySurfaceView extends GLSurfaceView
         	//清除深度缓冲与颜色缓冲
             GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
 
-//            //坐标系推远
-//            model.translate(0, -16f, -60f);
-//
-//            //绕Y轴、X轴旋转
-//            model.rotate(yAngle, 0, 1, 0);
-//            model.rotate(xAngle, 1, 0, 0);
-
             //指定使用某套着色器程序
             shader.use();
             //将最终变换矩阵传入着色器程序
@@ -148,9 +201,9 @@ class MySurfaceView extends GLSurfaceView
             //将顶点纹理坐标数据传入渲染管线
             shader.setPointer2f("aTexCoor", false, model.mTexCoorBuffer);
             //将摄像机位置传入着色器程序
-            shader.setVec3f("uCamera", camera.cameraFB);
+            shader.setVec3f("uCamera", camera.positionBuffer);
             //将光源位置传入着色器程序
-            shader.setVec3f("uLightLocation", light.cameraFB);
+            shader.setVec3f("uLightLocation", light.positionBuffer);
             model.draw();
         }  
 
@@ -163,6 +216,4 @@ class MySurfaceView extends GLSurfaceView
             camera.setProjectFrustum(-ratio, ratio, -1, 1, 2, 100);
         }
     }
-
-
 }

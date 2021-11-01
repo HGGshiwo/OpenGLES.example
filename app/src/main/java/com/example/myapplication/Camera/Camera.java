@@ -12,12 +12,9 @@ import java.nio.FloatBuffer;
 
 public class Camera extends Object3D {
 
-    public float[] mVMatrix = new float[16];//摄像机位置朝向9参数矩阵
-    public float[] mProjMatrix = new float[16];//4x4矩阵 投影用
-    public float[] position = new float[]{0,0,0};
-    public float[] front = new float[]{0,0,-1};
-    public float[] up = new float[]{0,1,0};
-    public FloatBuffer cameraFB;
+    public float[] mVMatrix;//摄像机位置朝向9参数矩阵
+    public float[] mProjMatrix;//4x4矩阵 投影用
+    public FloatBuffer positionBuffer;
 
     public Camera(
             float left,		//near面的left
@@ -35,12 +32,14 @@ public class Camera extends Object3D {
             float rz
     ){
         super(x,y,z,a,rx,ry,rz);
+        mVMatrix  = new float[16];
+        mProjMatrix = new float[16];
         setProjectFrustum(left,right,bottom,top,near,far);
-        setCamera();
+        setLookAt();
+        setPositionBuffer();
     }
 
-    public void setCamera() {
-
+    public void setLookAt() {
         Matrix.setLookAtM
                 (
                         mVMatrix,
@@ -48,19 +47,21 @@ public class Camera extends Object3D {
                         position[0],
                         position[1],
                         position[2],
-                        front[0],
-                        front[1],
-                        front[2],
+                        position[0]+front[0],
+                        position[1]+front[1],
+                        position[2]+front[2],
                         up[0],
                         up[1],
                         up[2]
                 );
+    }
 
+    protected void setPositionBuffer(){
         ByteBuffer llbb = ByteBuffer.allocateDirect(3*4);
         llbb.order(ByteOrder.nativeOrder());//设置字节顺序
-        cameraFB=llbb.asFloatBuffer();
-        cameraFB.put(position);
-        cameraFB.position(0);
+        positionBuffer=llbb.asFloatBuffer();
+        positionBuffer.put(position);
+        positionBuffer.position(0);
     }
 
     public void setProjectFrustum
@@ -73,7 +74,6 @@ public class Camera extends Object3D {
                     float far       //far面距离
             ) {
         Matrix.frustumM(mProjMatrix, 0, left, right, bottom, top, near, far);
-        setCamera();
     }
 
     //设置正交投影参数
@@ -89,19 +89,16 @@ public class Camera extends Object3D {
         Matrix.orthoM(mProjMatrix, 0, left, right, bottom, top, near, far);
     }
 
-    public void translate(float x, float y, float z){
-        position[0] += x;
-        position[1] += y;
-        position[2] += z;
+    @Override
+    public void rotate(float angle,float x,float y,float z){
+        super.rotate(angle,x,y,z);
+        setLookAt();
+    }
 
-        front[0] += x;
-        front[1] += y;
-        front[2] += z;
-
-        front[0] += x;
-        front[1] += y;
-        front[2] += z;
-
-        setCamera();
+    @Override
+    public void translate(float x,float y,float z){
+        super.translate(x,y,z);
+        setPositionBuffer();
+        setLookAt();
     }
 }
