@@ -11,8 +11,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Light"
-            android:id="@+id/Light1"
-            android:onClick="chooseLight1">
+            android:id="@+id/Light"
+            android:onClick="chooseLight">
         </Button>
         <Button
             android:layout_width="wrap_content"

@@ -157,6 +157,52 @@ class MySurfaceView extends GLSurfaceView
         camera.rotate(angle, 0, 1, 0);
     }
 
+    public void moveLightLeft(){
+        float [] rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        light.up[0],
+                        light.up[1],
+                        light.up[2],
+                        light.front[0],
+                        light.front[1],
+                        light.front[2]
+                ));
+
+        light.translate(
+                0.5f*rightDistance[0],
+                0,
+                0.5f*rightDistance[2]
+        );
+    }
+
+    public void moveLightRight(){
+        float [] rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        light.up[0],
+                        light.up[1],
+                        light.up[2],
+                        light.front[0],
+                        light.front[1],
+                        light.front[2]
+                ));
+
+        light.translate(
+                -0.5f*rightDistance[0],
+                0,
+                -0.5f*rightDistance[2]
+        );
+    }
+
+    public void moveLightBack(){
+        float [] front = light.front;
+        light.translate(-0.5f*front[0],0,-0.5f*front[2]);
+    }
+
+    public void moveLightForward(){
+        float [] front = light.front;
+        light.translate(0.5f*front[0],0,0.5f*front[2]);
+    }
+
     public void setAmbient(int value){
 	    light.setAmbient(value*0.003f);
     }

@@ -16,7 +16,7 @@ import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
 
-    public enum Mode{OBJECT, LIGHT1, LIGHT2, CAMERA};
+    public enum Mode{OBJECT, LIGHT, CAMERA};
 
     private MySurfaceView mGLSurfaceView;
     private CardView objectSetting;
@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
                         case CAMERA:
                             mGLSurfaceView.moveCameraBack();
                             break;
-                        case LIGHT1:
-                        case LIGHT2:
+                        case LIGHT:
+                            mGLSurfaceView.moveLightBack();
                             break;
                         case OBJECT:
                             mGLSurfaceView.moveObjectBack();
@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
                         case CAMERA:
                             mGLSurfaceView.moveCameraForward();
                             break;
-                        case LIGHT1:
-                        case LIGHT2:
+                        case LIGHT:
+                            mGLSurfaceView.moveLightForward();
                             break;
                         case OBJECT:
                             mGLSurfaceView.moveObjectForward();
@@ -112,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
                         case CAMERA:
                             mGLSurfaceView.moveCameraLeft();
                             break;
-                        case LIGHT1:
-                        case LIGHT2:
+                        case LIGHT:
+                            mGLSurfaceView.moveLightLeft();
                             break;
                         case OBJECT:
                             mGLSurfaceView.moveObjectLeft();
@@ -130,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
                         case CAMERA:
                             mGLSurfaceView.moveCameraRight();
                             break;
-                        case LIGHT1:
-                        case LIGHT2:
+                        case LIGHT:
+                            mGLSurfaceView.moveLightRight();
                             break;
                         case OBJECT:
                             mGLSurfaceView.moveObjectRight();
@@ -263,8 +263,8 @@ public class MainActivity extends AppCompatActivity {
         mGLSurfaceView.onPause();
     }
 
-    public void chooseLight1(View v){
-        mode = Mode.LIGHT1;
+    public void chooseLight(View v){
+        mode = Mode.LIGHT;
         objectSetting.setVisibility(View.GONE);
         lightSetting.setVisibility(View.VISIBLE);
     }
