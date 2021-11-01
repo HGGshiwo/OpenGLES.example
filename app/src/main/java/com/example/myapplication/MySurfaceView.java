@@ -34,6 +34,7 @@ class MySurfaceView extends GLSurfaceView
     
     private Shader shader;
     private Model model;
+    private Model table;
     private Camera camera;
     private Light light;
 
@@ -232,7 +233,13 @@ class MySurfaceView extends GLSurfaceView
             shader = new Shader("vertex.sh","frag.sh", getResources());
             //加载要绘制的物体
             model = new Model("ch_t.obj", R.drawable.qhc, MySurfaceView.this.getResources());
-            model.translate(0, -16f, -60f);
+            model.translate(0, -2f, -5f);
+            model.scale(0.05f,0.05f,0.05f);
+
+            table = new Model("ganbox.obj", R.drawable.ganbox, MySurfaceView.this.getResources());
+            table.translate(0,-3,-5);
+            table.scale(3,3,3);
+
             //设置照相机
             camera = new Camera(-1, 1, -1, 1, 2, 100,
                     0,0,0,0f,0f,-1f,0f);
@@ -245,22 +252,8 @@ class MySurfaceView extends GLSurfaceView
         { 
         	//清除深度缓冲与颜色缓冲
             GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
-
             //指定使用某套着色器程序
             shader.use();
-            //将最终变换矩阵传入着色器程序
-            float[] mMVPMatrix=new float[16];
-            Matrix.multiplyMM(mMVPMatrix, 0, camera.mVMatrix, 0, model.currMatrix, 0);
-            Matrix.multiplyMM(mMVPMatrix, 0, camera.mProjMatrix, 0, mMVPMatrix, 0);
-            shader.setMat4f("uMVPMatrix", mMVPMatrix);
-            //将位置、旋转变换矩阵传入着色器程序
-            shader.setMat4f("uMMatrix", model.currMatrix);
-            // 将顶点位置数据传入渲染管线
-            shader.setPointer3f("aPosition",false, model.mVertexBuffer);
-            //将顶点法向量数据传入渲染管线
-            shader.setPointer3f("aNormal",false, model.mNormalBuffer);
-            //将顶点纹理坐标数据传入渲染管线
-            shader.setPointer2f("aTexCoor", false, model.mTexCoorBuffer);
             //将摄像机位置传入着色器程序
             shader.setVec3f("uCamera", camera.positionBuffer);
             //将光源位置传入着色器程序
@@ -271,10 +264,9 @@ class MySurfaceView extends GLSurfaceView
             shader.setFloat("uLightDiffuse", light.diffuse);
             //将镜面光强度传入着色器程序
             shader.setFloat("uLightSpecular", light.specular);
-            //将粗糙度传入着色器程序
-            shader.setFloat("uShininess", model.shininess);
             //绘制模型
-            model.draw();
+            model.draw(shader, camera);
+            table.draw(shader, camera);
         }  
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {

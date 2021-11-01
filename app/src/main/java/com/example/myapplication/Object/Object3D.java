@@ -47,6 +47,10 @@ public class Object3D {
         position[2]+=z;
     }
 
+    public void scale(float x,float y,float z){
+        Matrix.scaleM(currMatrix,0,x,y,z);
+    }
+
     public void rotate(float angle,float x,float y,float z){//…Ë÷√»∆xyz÷·“∆∂Ø
         Matrix.rotateM(currMatrix,0,angle,x,y,z);
         float[] rotateMatrix = new float[16];

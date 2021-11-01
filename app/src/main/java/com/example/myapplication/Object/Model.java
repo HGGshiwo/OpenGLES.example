@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES30;
 import android.opengl.GLUtils;
+import android.opengl.Matrix;
 
+import com.example.myapplication.Camera.Camera;
 import com.example.myapplication.Shader.Shader;
 
 import java.io.BufferedReader;
@@ -275,7 +277,22 @@ public class Model extends Object3D{
         texId = textureId;
     }
 
-    public void draw() {
+    public void draw(Shader shader, Camera camera) {
+        //将最终变换矩阵传入着色器程序
+        float[] mMVPMatrix=new float[16];
+        Matrix.multiplyMM(mMVPMatrix, 0, camera.mVMatrix, 0, currMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, camera.mProjMatrix, 0, mMVPMatrix, 0);
+        shader.setMat4f("uMVPMatrix", mMVPMatrix);
+        //将位置、旋转变换矩阵传入着色器程序
+        shader.setMat4f("uMMatrix", currMatrix);
+        // 将顶点位置数据传入渲染管线
+        shader.setPointer3f("aPosition",false, mVertexBuffer);
+        //将顶点法向量数据传入渲染管线
+        shader.setPointer3f("aNormal",false, mNormalBuffer);
+        //将顶点纹理坐标数据传入渲染管线
+        shader.setPointer2f("aTexCoor", false, mTexCoorBuffer);
+        //将粗糙度传入着色器程序
+        shader.setFloat("uShininess", shininess);
         //绑定纹理
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0);//启用0号纹理
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId);//绑定纹理
