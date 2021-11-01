@@ -61,8 +61,7 @@ public class Camera extends Object3D {
         llbb.order(ByteOrder.nativeOrder());//ÉèÖÃ×Ö½ÚË³Ðò
         positionBuffer=llbb.asFloatBuffer();
         positionBuffer.put(position);
-//        positionBuffer.position(0);
-        positionBuffer.flip();
+        positionBuffer.position(0);
     }
 
     public void setProjectFrustum

@@ -23,10 +23,12 @@ public class Model extends Object3D{
     int vCount=0;
 
     public FloatBuffer mVertexBuffer;//顶点坐标数据缓冲
-    public FloatBuffer   mNormalBuffer;//顶点法向量数据缓冲
-    public FloatBuffer   mTexCoorBuffer;//顶点纹理坐标数据缓冲
+    public FloatBuffer mNormalBuffer;//顶点法向量数据缓冲
+    public FloatBuffer mTexCoorBuffer;//顶点纹理坐标数据缓冲
 
     int texId;//纹理
+
+    public float shininess;//光滑度
 
     public Model(
             float[] vertices,
@@ -36,6 +38,7 @@ public class Model extends Object3D{
             Resources resources
     ){
         super();
+        shininess = 50;
         initTexture(drawableId, resources);
         initVertexData(vertices, normals, texCoors);
     }

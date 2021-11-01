@@ -10,16 +10,9 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Light1"
+            android:text="Light"
             android:id="@+id/Light1"
             android:onClick="chooseLight1">
-        </Button>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Light2"
-            android:id="@+id/Light2"
-            android:onClick="chooseLight2">
         </Button>
         <Button
             android:layout_width="wrap_content"
@@ -47,45 +40,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="环境光">
+                        android:text="光滑度">
                     </TextView>
                     <SeekBar
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:id="@+id/SeekBar_ambient1">
-                    </SeekBar>
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="散射光">
-                    </TextView>
-                    <SeekBar
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:id="@+id/SeekBar_diffuse1">
-                    </SeekBar>
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="镜面光">
-                    </TextView>
-                    <SeekBar
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:id="@+id/SeekBar_specular1">
+                        android:id="@+id/SeekBar_shininess">
                     </SeekBar>
                 </RelativeLayout>
                 <RelativeLayout
@@ -127,6 +88,8 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:max="100"
+                    android:progress="50"
                     android:id="@+id/SeekBar_ambient">
                 </SeekBar>
             </RelativeLayout>
@@ -143,7 +106,9 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:id="@+id/SeekBar_diffuse">
+                    android:id="@+id/SeekBar_diffuse"
+                    android:max="100"
+                    android:progress="50">
                 </SeekBar>
             </RelativeLayout>
             <RelativeLayout
@@ -159,7 +124,9 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:id="@+id/SeekBar_specular">
+                    android:id="@+id/SeekBar_specular"
+                    android:max="100"
+                    android:progress="50">
                 </SeekBar>
             </RelativeLayout>
             <RelativeLayout
@@ -187,26 +154,26 @@
         android:layout_alignParentRight="true">
 
         <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:text="U"
             android:id="@+id/button_up">
         </Button>
         <RelativeLayout
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:text="L"
                 android:id="@+id/button_left">
             </Button>
             <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:padding="3dp"
                 android:layout_alignParentRight="true"
                 android:text="R"
@@ -215,8 +182,8 @@
         </RelativeLayout>
 
         <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:text="D"
             android:id="@+id/button_down">

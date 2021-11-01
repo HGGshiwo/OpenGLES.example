@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
+import android.widget.SeekBar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonRight;
     private Button buttonUp;
     private Button buttonDown;
+
+    private SeekBar seekBarAmbient;
+    private SeekBar seekBarDiffuse;
+    private SeekBar seekBarSpecular;
+    private SeekBar seekBarShininess;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -141,71 +147,107 @@ public class MainActivity extends AppCompatActivity {
         }
 
         buttonDown = findViewById(R.id.button_down);
-        buttonDown.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        isMovingDown = true;
-                        MovingThread mt = new MovingThread();
-                        mt.start();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        isMovingDown = false;
-                }
-                return true;
+        buttonDown.setOnTouchListener((v, event) -> {
+            switch (event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    isMovingDown = true;
+                    MovingThread mt = new MovingThread();
+                    mt.start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    isMovingDown = false;
             }
+            return true;
         });
 
         buttonUp = findViewById(R.id.button_up);
-        buttonUp.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        isMovingUp = true;
-                        MovingThread mt = new MovingThread();
-                        mt.start();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        isMovingUp = false;
-                }
-                return true;
+        buttonUp.setOnTouchListener((v, event) -> {
+            switch (event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    isMovingUp = true;
+                    MovingThread mt = new MovingThread();
+                    mt.start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    isMovingUp = false;
             }
+            return true;
         });
 
         buttonLeft = findViewById(R.id.button_left);
-        buttonLeft.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        isMovingLeft = true;
-                        MovingThread mt = new MovingThread();
-                        mt.start();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        isMovingLeft = false;
-                }
-                return true;
+        buttonLeft.setOnTouchListener((v, event) -> {
+            switch (event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    isMovingLeft = true;
+                    MovingThread mt = new MovingThread();
+                    mt.start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    isMovingLeft = false;
             }
+            return true;
         });
 
         buttonRight = findViewById(R.id.button_right);
-        buttonRight.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        isMovingRight = true;
-                        MovingThread mt = new MovingThread();
-                        mt.start();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        isMovingRight = false;
-                }
-                return true;
+        buttonRight.setOnTouchListener((v, event) -> {
+            switch (event.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    isMovingRight = true;
+                    MovingThread mt = new MovingThread();
+                    mt.start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    isMovingRight = false;
             }
+            return true;
+        });
+
+        seekBarAmbient = findViewById(R.id.SeekBar_ambient);
+        seekBarAmbient.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mGLSurfaceView.setAmbient(progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        seekBarDiffuse = findViewById(R.id.SeekBar_diffuse);
+        seekBarDiffuse.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mGLSurfaceView.setDiffuse(progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        seekBarSpecular = findViewById(R.id.SeekBar_specular);
+        seekBarSpecular.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mGLSurfaceView.setSecular(progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        seekBarShininess = findViewById(R.id.SeekBar_shininess);
+        seekBarShininess.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mGLSurfaceView.setShininess(progress);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
     }
 
@@ -223,12 +265,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void chooseLight1(View v){
         mode = Mode.LIGHT1;
-        objectSetting.setVisibility(View.GONE);
-        lightSetting.setVisibility(View.VISIBLE);
-    }
-
-    public void chooseLight2(View v){
-        mode = Mode.LIGHT2;
         objectSetting.setVisibility(View.GONE);
         lightSetting.setVisibility(View.VISIBLE);
     }

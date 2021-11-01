@@ -3,6 +3,13 @@ uniform mat4 uMVPMatrix; //总变换矩阵
 uniform mat4 uMMatrix; //变换矩阵
 uniform vec3 uLightLocation;	//光源位置
 uniform vec3 uCamera;	//摄像机位置
+
+uniform float uLightAmbient; //环境光强度 0.15
+uniform float uLightDiffuse; //散射光强度 0.9
+uniform float uLightSpecular;	//镜面光强度 0.4
+
+uniform float uShininess; //粗糙度，越小越光滑 50.0
+
 in vec3 aPosition;  //顶点位置
 in vec3 aNormal;    //顶点法向量
 in vec2 aTexCoor;    //顶点纹理坐标
@@ -19,8 +26,9 @@ void pointLight(					//定位光光照计算的方法
   inout vec4 specular,			//镜面光最终强度
   in vec3 lightLocation,			//光源位置
   in vec4 lightAmbient,			//环境光强度
-  in vec4 lightDiffuse,			//散射光强度
-  in vec4 lightSpecular			//镜面光强度
+  in vec4 lightDiffuse,     //散射光强度
+  in vec4 lightSpecular,     //镜面光强度
+  in float shininess
 ){
   ambient=lightAmbient;			//直接得出环境光的最终强度  
   vec3 normalTarget=aPosition+normal;	//计算变换后的法向量
@@ -31,8 +39,7 @@ void pointLight(					//定位光光照计算的方法
   //计算从表面点到光源位置的向量vp
   vec3 vp= normalize(lightLocation-(uMMatrix*vec4(aPosition,1)).xyz);  
   vp=normalize(vp);//格式化vp
-  vec3 halfVector=normalize(vp+eye);	//求视线与光线的半向量    
-  float shininess=50.0;				//粗糙度，越小越光滑
+  vec3 halfVector=normalize(vp+eye);	//求视线与光线的半向量
   float nDotViewPosition=max(0.0,dot(newNormal,vp)); 	//求法向量与vp的点积与0的最大值
   diffuse=lightDiffuse*nDotViewPosition;				//计算散射光的最终强度
   float nDotViewHalfVector=dot(newNormal,halfVector);	//法线与半向量的点积 
@@ -46,7 +53,18 @@ void main()
    gl_Position = uMVPMatrix * vec4(aPosition,1); //根据总变换矩阵计算此次绘制此顶点位置
    
    vec4 ambientTemp, diffuseTemp, specularTemp;   //存放环境光、散射光、镜面反射光的临时变量      
-   pointLight(normalize(aNormal),ambientTemp,diffuseTemp,specularTemp,uLightLocation,vec4(0.15,0.15,0.15,1.0),vec4(0.9,0.9,0.9,1.0),vec4(0.4,0.4,0.4,1.0));
+
+   pointLight(
+    normalize(aNormal),
+    ambientTemp,
+    diffuseTemp,
+    specularTemp,
+    uLightLocation,
+    vec4(uLightAmbient,uLightAmbient,uLightAmbient,1.0),
+    vec4(uLightDiffuse,uLightDiffuse,uLightDiffuse,1.0),
+    vec4(uLightSpecular,uLightSpecular,uLightSpecular,1.0),
+    uShininess
+   );
    
    ambient=ambientTemp;
    diffuse=diffuseTemp;

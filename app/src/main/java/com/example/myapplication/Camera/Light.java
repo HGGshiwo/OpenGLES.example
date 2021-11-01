@@ -1,12 +1,13 @@
 package com.example.myapplication.Camera;
 
-import com.example.myapplication.Shader.Shader;
-
 public class Light extends Camera{
-    private String name;
+
+    public String name;
+    public float ambient;
+    public float diffuse;
+    public float specular;
 
     public Light(
-            String cameraName,
             float left,		//near面的left
             float right,    //near面的right
             float bottom,   //near面的bottom
@@ -22,6 +23,21 @@ public class Light extends Camera{
             float rz
     ){
         super(left, right, bottom, top, near, far, x, y, z, a, rx, ry, rz);
-        name=cameraName;
+        name = "uLight";
+        ambient = 0.15f;
+        diffuse = 0.9f;
+        specular = 0.4f;
+    }
+
+    public void setAmbient(float ambient) {
+        this.ambient = ambient;
+    }
+
+    public void setDiffuse(float diffuse) {
+        this.diffuse = diffuse;
+    }
+
+    public void setSpecular(float specular) {
+        this.specular = specular;
     }
 }

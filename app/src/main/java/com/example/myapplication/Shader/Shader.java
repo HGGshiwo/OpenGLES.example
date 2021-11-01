@@ -140,6 +140,11 @@ public class Shader
        GLES30.glUseProgram(id);
    }
 
+   public void setFloat(String name, float v){
+       int location = GLES30.glGetUniformLocation(id, name);
+       GLES30.glUniform1f(location, v);
+   }
+
    public void setMat4f(String name, float[] mat4){
        int location = GLES30.glGetUniformLocation(id, name);
        GLES30.glUniformMatrix4fv(location, 1, false, mat4, 0);

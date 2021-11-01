@@ -47,8 +47,7 @@ class MySurfaceView extends GLSurfaceView
 	
 	//触摸事件回调方法
     @Override 
-    public boolean onTouchEvent(MotionEvent e)
-    {
+    public boolean onTouchEvent(MotionEvent e) {
         float y = e.getY();
         float x = e.getX();
         switch (e.getAction()) {
@@ -158,6 +157,22 @@ class MySurfaceView extends GLSurfaceView
         camera.rotate(angle, 0, 1, 0);
     }
 
+    public void setAmbient(int value){
+	    light.setAmbient(value*0.003f);
+    }
+
+    public void setDiffuse(int value){
+	    light.setDiffuse(value*0.018f);
+    }
+
+    public void setSecular(int value){
+	    light.setSpecular(value*0.008f);
+    }
+
+    public void setShininess(int value){
+	    model.shininess = value*1f;
+    }
+
 	private class SceneRenderer implements GLSurfaceView.Renderer {
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -176,7 +191,7 @@ class MySurfaceView extends GLSurfaceView
             camera = new Camera(-1, 1, -1, 1, 2, 100,
                     0,0,0,0f,0f,-1f,0f);
             //初始化光源位置
-            light = new Light("uLightLocation",-1, 1, -1, 1, 2, 100,
+            light = new Light(-1, 1, -1, 1, 2, 100,
                     40,10,20,0f,0f,-1f,0f);
         }
 
@@ -204,6 +219,15 @@ class MySurfaceView extends GLSurfaceView
             shader.setVec3f("uCamera", camera.positionBuffer);
             //将光源位置传入着色器程序
             shader.setVec3f("uLightLocation", light.positionBuffer);
+            //将环境光强度传入着色器程序
+            shader.setFloat("uLightAmbient", light.ambient);
+            //将散射光强度传入着色器程序
+            shader.setFloat("uLightDiffuse", light.diffuse);
+            //将镜面光强度传入着色器程序
+            shader.setFloat("uLightSpecular", light.specular);
+            //将粗糙度传入着色器程序
+            shader.setFloat("uShininess", model.shininess);
+            //绘制模型
             model.draw();
         }  
 
