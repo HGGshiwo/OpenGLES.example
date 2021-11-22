@@ -8,17 +8,17 @@ import java.nio.FloatBuffer;
 
 public class Object3D {
 
-    public float[] currMatrix;//µ±Ç°±ä»»¾ØÕó
-    public float[] up; //Ïà»úlookAtÊ¹ÓÃ
-    public float[] front; //Ïà»úlookAtÊ¹ÓÃ
-    public float[] position; //Ïà»úlookAtÊ¹ÓÃ
+    public float[] currMatrix;//å½“å‰å˜æ¢çŸ©é˜µ
+    public float[] up; //ç›¸æœºlookAtä½¿ç”¨
+    public float[] front; //ç›¸æœºlookAtä½¿ç”¨
+    public float[] position; //ç›¸æœºlookAtä½¿ç”¨
 
     public Object3D(){
         up = new float[]{0f,1f,0f};
         front = new float[]{0f,0f,-1f};
         position = new float[]{0,0,0};
         currMatrix = new float[16];
-        Matrix.setRotateM(currMatrix,0,0,0,1,0);//×¢ÒâÕâÀïÊÇset
+        Matrix.setRotateM(currMatrix,0,0,0,1,0);//æ³¨æ„è¿™é‡Œæ˜¯set
     }
 
     public Object3D(
@@ -40,7 +40,7 @@ public class Object3D {
         Matrix.rotateM(currMatrix,0, a, rx, ry, rz);
     }
 
-    public void translate(float x,float y,float z){//ÉèÖÃÑØxyzÖáÒÆ¶¯
+    public void translate(float x,float y,float z){//è®¾ç½®æ²¿xyzè½´ç§»åŠ¨
         Matrix.translateM(currMatrix, 0, x, y, z);
         position[0]+=x;
         position[1]+=y;
@@ -51,7 +51,7 @@ public class Object3D {
         Matrix.scaleM(currMatrix,0,x,y,z);
     }
 
-    public void rotate(float angle,float x,float y,float z){//ÉèÖÃÈÆxyzÖáÒÆ¶¯
+    public void rotate(float angle,float x,float y,float z){//è®¾ç½®ç»•xyzè½´ç§»åŠ¨
         Matrix.rotateM(currMatrix,0,angle,x,y,z);
         float[] rotateMatrix = new float[16];
         float[] rotateFront =  new float[]{front[0],front[1],front[2],1f};

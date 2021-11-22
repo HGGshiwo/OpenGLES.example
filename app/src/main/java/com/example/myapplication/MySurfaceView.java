@@ -1,4 +1,4 @@
-package com.example.myapplication;//ÉùÃ÷°ü
+package com.example.myapplication;//å£°æ˜åŒ…
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,11 +26,11 @@ import com.example.myapplication.Shader.Shader;
 
 class MySurfaceView extends GLSurfaceView 
 {
-	private final float TOUCH_SCALE_FACTOR = 9.0f/320;//½Ç¶ÈËõ·Å±ÈÀı
-    private SceneRenderer mRenderer;//³¡¾°äÖÈ¾Æ÷    
+	private final float TOUCH_SCALE_FACTOR = 9.0f/320;//è§’åº¦ç¼©æ”¾æ¯”ä¾‹
+    private SceneRenderer mRenderer;//åœºæ™¯æ¸²æŸ“å™¨    
     
-    private float mPreviousY;//ÉÏ´ÎµÄ´¥¿ØÎ»ÖÃY×ø±ê
-    private float mPreviousX;//ÉÏ´ÎµÄ´¥¿ØÎ»ÖÃX×ø±ê
+    private float mPreviousY;//ä¸Šæ¬¡çš„è§¦æ§ä½ç½®Yåæ ‡
+    private float mPreviousX;//ä¸Šæ¬¡çš„è§¦æ§ä½ç½®Xåæ ‡
     
     private Shader shader;
     private Model model;
@@ -40,23 +40,23 @@ class MySurfaceView extends GLSurfaceView
 
 	public MySurfaceView(Context context) {
         super(context);
-        this.setEGLContextClientVersion(3); //ÉèÖÃÊ¹ÓÃOPENGL ES3.0
-        mRenderer = new SceneRenderer();	//´´½¨³¡¾°äÖÈ¾Æ÷
-        setRenderer(mRenderer);				//ÉèÖÃäÖÈ¾Æ÷		        
-        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);//ÉèÖÃäÖÈ¾Ä£Ê½ÎªÖ÷¶¯äÖÈ¾
+        this.setEGLContextClientVersion(3); //è®¾ç½®ä½¿ç”¨OPENGL ES3.0
+        mRenderer = new SceneRenderer();	//åˆ›å»ºåœºæ™¯æ¸²æŸ“å™¨
+        setRenderer(mRenderer);				//è®¾ç½®æ¸²æŸ“å™¨		        
+        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);//è®¾ç½®æ¸²æŸ“æ¨¡å¼ä¸ºä¸»åŠ¨æ¸²æŸ“
 	}
 	
-	//´¥ÃşÊÂ¼ş»Øµ÷·½·¨
+	//è§¦æ‘¸äº‹ä»¶å›è°ƒæ–¹æ³•
     @Override 
     public boolean onTouchEvent(MotionEvent e) {
         float y = e.getY();
         float x = e.getX();
         switch (e.getAction()) {
         case MotionEvent.ACTION_MOVE:
-            float dy = y - mPreviousY;//¼ÆËã´¥¿Ø±ÊYÎ»ÒÆ
-            float dx = x - mPreviousX;//¼ÆËã´¥¿Ø±ÊXÎ»ÒÆ
-            float yAngle = dx * TOUCH_SCALE_FACTOR;//ÉèÖÃÑØyÖáĞı×ª½Ç¶È
-            float xAngle = dy * TOUCH_SCALE_FACTOR;//ÉèÖÃÑØxÖáĞı×ª½Ç¶È
+            float dy = y - mPreviousY;//è®¡ç®—è§¦æ§ç¬”Yä½ç§»
+            float dx = x - mPreviousX;//è®¡ç®—è§¦æ§ç¬”Xä½ç§»
+            float yAngle = dx * TOUCH_SCALE_FACTOR;//è®¾ç½®æ²¿yè½´æ—‹è½¬è§’åº¦
+            float xAngle = dy * TOUCH_SCALE_FACTOR;//è®¾ç½®æ²¿xè½´æ—‹è½¬è§’åº¦
 
             MainActivity mainActivity = (MainActivity)getContext();
             switch (mainActivity.mode){
@@ -68,10 +68,10 @@ class MySurfaceView extends GLSurfaceView
                     rotateCameraUp(yAngle);
                     break;
             }
-            requestRender();//ÖØ»æ»­Ãæ
+            requestRender();//é‡ç»˜ç”»é¢
         }
-        mPreviousY = y;//¼ÇÂ¼´¥¿Ø±ÊÎ»ÖÃ
-        mPreviousX = x;//¼ÇÂ¼´¥¿Ø±ÊÎ»ÖÃ
+        mPreviousY = y;//è®°å½•è§¦æ§ç¬”ä½ç½®
+        mPreviousX = x;//è®°å½•è§¦æ§ç¬”ä½ç½®
         return true;
     }
 
@@ -223,15 +223,15 @@ class MySurfaceView extends GLSurfaceView
 	private class SceneRenderer implements GLSurfaceView.Renderer {
 
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-            //ÉèÖÃÆÁÄ»±³¾°É«RGBA
+            //è®¾ç½®å±å¹•èƒŒæ™¯è‰²RGBA
             GLES30.glClearColor(0.0f,0.0f,1.0f,1.0f);
-            //´ò¿ªÉî¶È¼ì²â
+            //æ‰“å¼€æ·±åº¦æ£€æµ‹
             GLES30.glEnable(GLES30.GL_DEPTH_TEST);
-            //´ò¿ª±³Ãæ¼ô²Ã
+            //æ‰“å¼€èƒŒé¢å‰ªè£
             GLES30.glEnable(GLES30.GL_CULL_FACE);
-            //¼ÓÔØ×ÅÉ«Æ÷
+            //åŠ è½½ç€è‰²å™¨
             shader = new Shader("vertex.sh","frag.sh", getResources());
-            //¼ÓÔØÒª»æÖÆµÄÎïÌå
+            //åŠ è½½è¦ç»˜åˆ¶çš„ç‰©ä½“
             model = new Model("ch_t.obj", R.drawable.qhc, MySurfaceView.this.getResources());
             model.translate(0, -2f, -5f);
             model.scale(0.05f,0.05f,0.05f);
@@ -240,41 +240,41 @@ class MySurfaceView extends GLSurfaceView
             table.translate(0,-3,-5);
             table.scale(3,3,3);
 
-            //ÉèÖÃÕÕÏà»ú
+            //è®¾ç½®ç…§ç›¸æœº
             camera = new Camera(-1, 1, -1, 1, 2, 100,
                     0,0,0,0f,0f,-1f,0f);
-            //³õÊ¼»¯¹âÔ´Î»ÖÃ
+            //åˆå§‹åŒ–å…‰æºä½ç½®
             light = new Light(-1, 1, -1, 1, 2, 100,
                     40,10,20,0f,0f,-1f,0f);
         }
 
         public void onDrawFrame(GL10 gl) 
         { 
-        	//Çå³ıÉî¶È»º³åÓëÑÕÉ«»º³å
+        	//æ¸…é™¤æ·±åº¦ç¼“å†²ä¸é¢œè‰²ç¼“å†²
             GLES30.glClear(GLES30.GL_DEPTH_BUFFER_BIT | GLES30.GL_COLOR_BUFFER_BIT);
-            //Ö¸¶¨Ê¹ÓÃÄ³Ì××ÅÉ«Æ÷³ÌĞò
+            //æŒ‡å®šä½¿ç”¨æŸå¥—ç€è‰²å™¨ç¨‹åº
             shader.use();
-            //½«ÉãÏñ»úÎ»ÖÃ´«Èë×ÅÉ«Æ÷³ÌĞò
+            //å°†æ‘„åƒæœºä½ç½®ä¼ å…¥ç€è‰²å™¨ç¨‹åº
             shader.setVec3f("uCamera", camera.positionBuffer);
-            //½«¹âÔ´Î»ÖÃ´«Èë×ÅÉ«Æ÷³ÌĞò
+            //å°†å…‰æºä½ç½®ä¼ å…¥ç€è‰²å™¨ç¨‹åº
             shader.setVec3f("uLightLocation", light.positionBuffer);
-            //½«»·¾³¹âÇ¿¶È´«Èë×ÅÉ«Æ÷³ÌĞò
+            //å°†ç¯å¢ƒå…‰å¼ºåº¦ä¼ å…¥ç€è‰²å™¨ç¨‹åº
             shader.setFloat("uLightAmbient", light.ambient);
-            //½«É¢Éä¹âÇ¿¶È´«Èë×ÅÉ«Æ÷³ÌĞò
+            //å°†æ•£å°„å…‰å¼ºåº¦ä¼ å…¥ç€è‰²å™¨ç¨‹åº
             shader.setFloat("uLightDiffuse", light.diffuse);
-            //½«¾µÃæ¹âÇ¿¶È´«Èë×ÅÉ«Æ÷³ÌĞò
+            //å°†é•œé¢å…‰å¼ºåº¦ä¼ å…¥ç€è‰²å™¨ç¨‹åº
             shader.setFloat("uLightSpecular", light.specular);
-            //»æÖÆÄ£ĞÍ
+            //ç»˜åˆ¶æ¨¡å‹
             model.draw(shader, camera);
             table.draw(shader, camera);
         }  
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            //ÉèÖÃÊÓ´°´óĞ¡¼°Î»ÖÃ 
+            //è®¾ç½®è§†çª—å¤§å°åŠä½ç½® 
         	GLES30.glViewport(0, 0, width, height); 
-        	//¼ÆËãGLSurfaceViewµÄ¿í¸ß±È
+        	//è®¡ç®—GLSurfaceViewçš„å®½é«˜æ¯”
             float ratio = (float) width / height;
-            //µ÷ÓÃ´Ë·½·¨¼ÆËã²úÉúÍ¸ÊÓÍ¶Ó°¾ØÕó
+            //è°ƒç”¨æ­¤æ–¹æ³•è®¡ç®—äº§ç”Ÿé€è§†æŠ•å½±çŸ©é˜µ
             camera.setProjectFrustum(-ratio, ratio, -1, 1, 2, 100);
         }
     }

@@ -12,17 +12,17 @@ import java.nio.FloatBuffer;
 
 public class Camera extends Object3D {
 
-    public float[] mVMatrix;//ÉãÏñ»úÎ»ÖÃ³¯Ïò9²ÎÊı¾ØÕó
-    public float[] mProjMatrix;//4x4¾ØÕó Í¶Ó°ÓÃ
+    public float[] mVMatrix;//æ‘„åƒæœºä½ç½®æœå‘9å‚æ•°çŸ©é˜µ
+    public float[] mProjMatrix;//4x4çŸ©é˜µ æŠ•å½±ç”¨
     public FloatBuffer positionBuffer;
 
     public Camera(
-            float left,		//nearÃæµÄleft
-            float right,    //nearÃæµÄright
-            float bottom,   //nearÃæµÄbottom
-            float top,      //nearÃæµÄtop
-            float near,		//nearÃæ¾àÀë
-            float far,       //farÃæ¾àÀë
+            float left,		//nearé¢çš„left
+            float right,    //nearé¢çš„right
+            float bottom,   //nearé¢çš„bottom
+            float top,      //nearé¢çš„top
+            float near,		//nearé¢è·ç¦»
+            float far,       //faré¢è·ç¦»
             float x,
             float y,
             float z,
@@ -58,7 +58,7 @@ public class Camera extends Object3D {
 
     protected void setPositionBuffer(){
         ByteBuffer llbb = ByteBuffer.allocateDirect(3*4);
-        llbb.order(ByteOrder.nativeOrder());//ÉèÖÃ×Ö½ÚË³Ğò
+        llbb.order(ByteOrder.nativeOrder());//è®¾ç½®å­—èŠ‚é¡ºåº
         positionBuffer=llbb.asFloatBuffer();
         positionBuffer.put(position);
         positionBuffer.position(0);
@@ -66,25 +66,25 @@ public class Camera extends Object3D {
 
     public void setProjectFrustum
             (
-                    float left,		//nearÃæµÄleft
-                    float right,    //nearÃæµÄright
-                    float bottom,   //nearÃæµÄbottom
-                    float top,      //nearÃæµÄtop
-                    float near,		//nearÃæ¾àÀë
-                    float far       //farÃæ¾àÀë
+                    float left,		//nearé¢çš„left
+                    float right,    //nearé¢çš„right
+                    float bottom,   //nearé¢çš„bottom
+                    float top,      //nearé¢çš„top
+                    float near,		//nearé¢è·ç¦»
+                    float far       //faré¢è·ç¦»
             ) {
         Matrix.frustumM(mProjMatrix, 0, left, right, bottom, top, near, far);
     }
 
-    //ÉèÖÃÕı½»Í¶Ó°²ÎÊı
+    //è®¾ç½®æ­£äº¤æŠ•å½±å‚æ•°
     public void setProjectOrtho
     (
-            float left,		//nearÃæµÄleft
-            float right,    //nearÃæµÄright
-            float bottom,   //nearÃæµÄbottom
-            float top,      //nearÃæµÄtop
-            float near,		//nearÃæ¾àÀë
-            float far       //farÃæ¾àÀë
+            float left,		//nearé¢çš„left
+            float right,    //nearé¢çš„right
+            float bottom,   //nearé¢çš„bottom
+            float top,      //nearé¢çš„top
+            float near,		//nearé¢è·ç¦»
+            float far       //faré¢è·ç¦»
     ) {
         Matrix.orthoM(mProjMatrix, 0, left, right, bottom, top, near, far);
     }

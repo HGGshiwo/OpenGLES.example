@@ -24,13 +24,13 @@ import java.util.HashSet;
 public class Model extends Object3D{
     int vCount=0;
 
-    public FloatBuffer mVertexBuffer;//¶¥µã×ø±êÊı¾İ»º³å
-    public FloatBuffer mNormalBuffer;//¶¥µã·¨ÏòÁ¿Êı¾İ»º³å
-    public FloatBuffer mTexCoorBuffer;//¶¥µãÎÆÀí×ø±êÊı¾İ»º³å
+    public FloatBuffer mVertexBuffer;//é¡¶ç‚¹åæ ‡æ•°æ®ç¼“å†²
+    public FloatBuffer mNormalBuffer;//é¡¶ç‚¹æ³•å‘é‡æ•°æ®ç¼“å†²
+    public FloatBuffer mTexCoorBuffer;//é¡¶ç‚¹çº¹ç†åæ ‡æ•°æ®ç¼“å†²
 
-    int texId;//ÎÆÀí
+    int texId;//çº¹ç†
 
-    public float shininess;//¹â»¬¶È
+    public float shininess;//å…‰æ»‘åº¦
 
     public Model(
             float[] vertices,
@@ -48,18 +48,18 @@ public class Model extends Object3D{
 
     public Model(String fname, int drawableId, Resources r){
         super();
-        //Ô­Ê¼¶¥µã×ø±êÁĞ±í--Ö±½Ó´ÓobjÎÄ¼şÖĞ¼ÓÔØ
+        //åŸå§‹é¡¶ç‚¹åæ ‡åˆ—è¡¨--ç›´æ¥ä»objæ–‡ä»¶ä¸­åŠ è½½
         ArrayList<Float> alv=new ArrayList<Float>();
-        //¶¥µã×é×°ÃæË÷ÒıÁĞ±í--¸ù¾İÃæµÄĞÅÏ¢´ÓÎÄ¼şÖĞ¼ÓÔØ
+        //é¡¶ç‚¹ç»„è£…é¢ç´¢å¼•åˆ—è¡¨--æ ¹æ®é¢çš„ä¿¡æ¯ä»æ–‡ä»¶ä¸­åŠ è½½
         ArrayList<Integer> alFaceIndex=new ArrayList<Integer>();
-        //½á¹û¶¥µã×ø±êÁĞ±í--°´Ãæ×éÖ¯ºÃ
+        //ç»“æœé¡¶ç‚¹åæ ‡åˆ—è¡¨--æŒ‰é¢ç»„ç»‡å¥½
         ArrayList<Float> alvResult=new ArrayList<Float>();
-        //Æ½¾ùÇ°¸÷¸öË÷Òı¶ÔÓ¦µÄµãµÄ·¨ÏòÁ¿¼¯ºÏMap
-        //´ËHashMapµÄkeyÎªµãµÄË÷Òı£¬ valueÎªµãËùÔÚµÄ¸÷¸öÃæµÄ·¨ÏòÁ¿µÄ¼¯ºÏ
+        //å¹³å‡å‰å„ä¸ªç´¢å¼•å¯¹åº”çš„ç‚¹çš„æ³•å‘é‡é›†åˆMap
+        //æ­¤HashMapçš„keyä¸ºç‚¹çš„ç´¢å¼•ï¼Œ valueä¸ºç‚¹æ‰€åœ¨çš„å„ä¸ªé¢çš„æ³•å‘é‡çš„é›†åˆ
         HashMap<Integer, HashSet<Normal>> hmn=new HashMap<Integer,HashSet<Normal>>();
-        //Ô­Ê¼ÎÆÀí×ø±êÁĞ±í
+        //åŸå§‹çº¹ç†åæ ‡åˆ—è¡¨
         ArrayList<Float> alt=new ArrayList<Float>();
-        //½á¹ûÎÆÀí×ø±êÁĞ±í
+        //ç»“æœçº¹ç†åæ ‡åˆ—è¡¨
         ArrayList<Float> altResult=new ArrayList<Float>();
 
         try {
@@ -68,30 +68,30 @@ public class Model extends Object3D{
             BufferedReader br = new BufferedReader(isr);
             String temps = null;
 
-            //É¨ÃèÎÄ¼ş£¬¸ù¾İĞĞÀàĞÍµÄ²»Í¬Ö´ĞĞ²»Í¬µÄ´¦ÀíÂß¼­
-            while ((temps = br.readLine()) != null) {//¶ÁÈ¡Ò»ĞĞÎÄ±¾
+            //æ‰«ææ–‡ä»¶ï¼Œæ ¹æ®è¡Œç±»å‹çš„ä¸åŒæ‰§è¡Œä¸åŒçš„å¤„ç†é€»è¾‘
+            while ((temps = br.readLine()) != null) {//è¯»å–ä¸€è¡Œæ–‡æœ¬
 
-                String[] tempsa = temps.split("[ ]+");//½«ÎÄ±¾ĞĞÓÃ¿Õ¸ñ·ûÇĞ·Ö
-                if (tempsa[0].trim().equals("v")) {//¶¥µã×ø±êĞĞ
-                    //ÈôÎª¶¥µã×ø±êĞĞÔòÌáÈ¡³ö´Ë¶¥µãµÄXYZ×ø±êÌí¼Óµ½Ô­Ê¼¶¥µã×ø±êÁĞ±íÖĞ
+                String[] tempsa = temps.split("[ ]+");//å°†æ–‡æœ¬è¡Œç”¨ç©ºæ ¼ç¬¦åˆ‡åˆ†
+                if (tempsa[0].trim().equals("v")) {//é¡¶ç‚¹åæ ‡è¡Œ
+                    //è‹¥ä¸ºé¡¶ç‚¹åæ ‡è¡Œåˆ™æå–å‡ºæ­¤é¡¶ç‚¹çš„XYZåæ ‡æ·»åŠ åˆ°åŸå§‹é¡¶ç‚¹åæ ‡åˆ—è¡¨ä¸­
                     alv.add(Float.parseFloat(tempsa[1]));
                     alv.add(Float.parseFloat(tempsa[2]));
                     alv.add(Float.parseFloat(tempsa[3]));
-                } else if (tempsa[0].trim().equals("vt")) {//ÎÆÀí×ø±êĞĞ
-                    //ÈôÎªÎÆÀí×ø±êĞĞÔòÌáÈ¡ST×ø±ê²¢Ìí¼Ó½øÔ­Ê¼ÎÆÀí×ø±êÁĞ±íÖĞ
-                    alt.add(Float.parseFloat(tempsa[1]));//ÌáÈ¡³öSÎÆÀí×ø±ê
-                    alt.add(1 - Float.parseFloat(tempsa[2]));    //ÌáÈ¡³öTÎÆÀí×ø±ê
-                } else if (tempsa[0].trim().equals("f")) {//ÃæÊı¾İĞĞ
+                } else if (tempsa[0].trim().equals("vt")) {//çº¹ç†åæ ‡è¡Œ
+                    //è‹¥ä¸ºçº¹ç†åæ ‡è¡Œåˆ™æå–STåæ ‡å¹¶æ·»åŠ è¿›åŸå§‹çº¹ç†åæ ‡åˆ—è¡¨ä¸­
+                    alt.add(Float.parseFloat(tempsa[1]));//æå–å‡ºSçº¹ç†åæ ‡
+                    alt.add(1 - Float.parseFloat(tempsa[2]));    //æå–å‡ºTçº¹ç†åæ ‡
+                } else if (tempsa[0].trim().equals("f")) {//é¢æ•°æ®è¡Œ
                     /*
-                     *ÈôÎªÈı½ÇĞÎÃæĞĞÔò¸ù¾İ ×é³ÉÃæµÄ¶¥µãµÄË÷Òı´ÓÔ­Ê¼¶¥µã×ø±êÁĞ±íÖĞ
-                     *ÌáÈ¡ÏàÓ¦µÄ¶¥µã×ø±êÖµÌí¼Óµ½½á¹û¶¥µã×ø±êÁĞ±íÖĞ£¬Í¬Ê±¸ù¾İÈı¸ö
-                     *¶¥µãµÄ×ø±ê¼ÆËã³ö´ËÃæµÄ·¨ÏòÁ¿²¢Ìí¼Óµ½Æ½¾ùÇ°¸÷¸öË÷Òı¶ÔÓ¦µÄµã
-                     *µÄ·¨ÏòÁ¿¼¯ºÏ×é³ÉµÄMapÖĞ
+                     *è‹¥ä¸ºä¸‰è§’å½¢é¢è¡Œåˆ™æ ¹æ® ç»„æˆé¢çš„é¡¶ç‚¹çš„ç´¢å¼•ä»åŸå§‹é¡¶ç‚¹åæ ‡åˆ—è¡¨ä¸­
+                     *æå–ç›¸åº”çš„é¡¶ç‚¹åæ ‡å€¼æ·»åŠ åˆ°ç»“æœé¡¶ç‚¹åæ ‡åˆ—è¡¨ä¸­ï¼ŒåŒæ—¶æ ¹æ®ä¸‰ä¸ª
+                     *é¡¶ç‚¹çš„åæ ‡è®¡ç®—å‡ºæ­¤é¢çš„æ³•å‘é‡å¹¶æ·»åŠ åˆ°å¹³å‡å‰å„ä¸ªç´¢å¼•å¯¹åº”çš„ç‚¹
+                     *çš„æ³•å‘é‡é›†åˆç»„æˆçš„Mapä¸­
                      */
 
-                    int[] index = new int[3];//Èı¸ö¶¥µãË÷ÒıÖµµÄÊı×é
+                    int[] index = new int[3];//ä¸‰ä¸ªé¡¶ç‚¹ç´¢å¼•å€¼çš„æ•°ç»„
 
-                    //¼ÆËãµÚ0¸ö¶¥µãµÄË÷Òı£¬²¢»ñÈ¡´Ë¶¥µãµÄXYZÈı¸ö×ø±ê
+                    //è®¡ç®—ç¬¬0ä¸ªé¡¶ç‚¹çš„ç´¢å¼•ï¼Œå¹¶è·å–æ­¤é¡¶ç‚¹çš„XYZä¸‰ä¸ªåæ ‡
                     index[0] = Integer.parseInt(tempsa[1].split("/")[0]) - 1;
                     float x0 = alv.get(3 * index[0]);
                     float y0 = alv.get(3 * index[0] + 1);
@@ -100,7 +100,7 @@ public class Model extends Object3D{
                     alvResult.add(y0);
                     alvResult.add(z0);
 
-                    //¼ÆËãµÚ1¸ö¶¥µãµÄË÷Òı£¬²¢»ñÈ¡´Ë¶¥µãµÄXYZÈı¸ö×ø±ê
+                    //è®¡ç®—ç¬¬1ä¸ªé¡¶ç‚¹çš„ç´¢å¼•ï¼Œå¹¶è·å–æ­¤é¡¶ç‚¹çš„XYZä¸‰ä¸ªåæ ‡
                     index[1] = Integer.parseInt(tempsa[2].split("/")[0]) - 1;
                     float x1 = alv.get(3 * index[1]);
                     float y1 = alv.get(3 * index[1] + 1);
@@ -109,7 +109,7 @@ public class Model extends Object3D{
                     alvResult.add(y1);
                     alvResult.add(z1);
 
-                    //¼ÆËãµÚ2¸ö¶¥µãµÄË÷Òı£¬²¢»ñÈ¡´Ë¶¥µãµÄXYZÈı¸ö×ø±ê
+                    //è®¡ç®—ç¬¬2ä¸ªé¡¶ç‚¹çš„ç´¢å¼•ï¼Œå¹¶è·å–æ­¤é¡¶ç‚¹çš„XYZä¸‰ä¸ªåæ ‡
                     index[2] = Integer.parseInt(tempsa[3].split("/")[0]) - 1;
                     float x2 = alv.get(3 * index[2]);
                     float y2 = alv.get(3 * index[2] + 1);
@@ -118,82 +118,82 @@ public class Model extends Object3D{
                     alvResult.add(y2);
                     alvResult.add(z2);
 
-                    //¼ÇÂ¼´ËÃæµÄ¶¥µãË÷Òı
+                    //è®°å½•æ­¤é¢çš„é¡¶ç‚¹ç´¢å¼•
                     alFaceIndex.add(index[0]);
                     alFaceIndex.add(index[1]);
                     alFaceIndex.add(index[2]);
 
-                    //Í¨¹ıÈı½ÇĞÎÃæÁ½¸ö±ßÏòÁ¿0-1£¬0-2Çó²æ»ıµÃµ½´ËÃæµÄ·¨ÏòÁ¿
-                    //Çó0ºÅµãµ½1ºÅµãµÄÏòÁ¿
+                    //é€šè¿‡ä¸‰è§’å½¢é¢ä¸¤ä¸ªè¾¹å‘é‡0-1ï¼Œ0-2æ±‚å‰ç§¯å¾—åˆ°æ­¤é¢çš„æ³•å‘é‡
+                    //æ±‚0å·ç‚¹åˆ°1å·ç‚¹çš„å‘é‡
                     float vxa = x1 - x0;
                     float vya = y1 - y0;
                     float vza = z1 - z0;
-                    //Çó0ºÅµãµ½2ºÅµãµÄÏòÁ¿
+                    //æ±‚0å·ç‚¹åˆ°2å·ç‚¹çš„å‘é‡
                     float vxb = x2 - x0;
                     float vyb = y2 - y0;
                     float vzb = z2 - z0;
-                    //Í¨¹ıÇóÁ½¸öÏòÁ¿µÄ²æ»ı¼ÆËã·¨ÏòÁ¿
+                    //é€šè¿‡æ±‚ä¸¤ä¸ªå‘é‡çš„å‰ç§¯è®¡ç®—æ³•å‘é‡
                     float[] vNormal = vectorNormal(getCrossProduct
                             (
                                     vxa, vya, vza, vxb, vyb, vzb
                             ));
-                    for (int tempInxex : index) {//¼ÇÂ¼Ã¿¸öË÷ÒıµãµÄ·¨ÏòÁ¿µ½Æ½¾ùÇ°¸÷¸öË÷Òı¶ÔÓ¦µÄµãµÄ·¨ÏòÁ¿¼¯ºÏ×é³ÉµÄMapÖĞ
-                        //»ñÈ¡µ±Ç°Ë÷Òı¶ÔÓ¦µãµÄ·¨ÏòÁ¿¼¯ºÏ
+                    for (int tempInxex : index) {//è®°å½•æ¯ä¸ªç´¢å¼•ç‚¹çš„æ³•å‘é‡åˆ°å¹³å‡å‰å„ä¸ªç´¢å¼•å¯¹åº”çš„ç‚¹çš„æ³•å‘é‡é›†åˆç»„æˆçš„Mapä¸­
+                        //è·å–å½“å‰ç´¢å¼•å¯¹åº”ç‚¹çš„æ³•å‘é‡é›†åˆ
                         HashSet<Normal> hsn = hmn.get(tempInxex);
-                        if (hsn == null) {//Èô¼¯ºÏ²»´æÔÚÔò´´½¨
+                        if (hsn == null) {//è‹¥é›†åˆä¸å­˜åœ¨åˆ™åˆ›å»º
                             hsn = new HashSet<Normal>();
                         }
-                        //½«´ËµãµÄ·¨ÏòÁ¿Ìí¼Óµ½¼¯ºÏÖĞ
-                        //ÓÉÓÚNormalÀàÖØĞ´ÁËequals·½·¨£¬Òò´ËÍ¬ÑùµÄ·¨ÏòÁ¿²»»áÖØ¸´³öÏÖÔÚ´Ëµã
-                        //¶ÔÓ¦µÄ·¨ÏòÁ¿¼¯ºÏÖĞ
+                        //å°†æ­¤ç‚¹çš„æ³•å‘é‡æ·»åŠ åˆ°é›†åˆä¸­
+                        //ç”±äºNormalç±»é‡å†™äº†equalsæ–¹æ³•ï¼Œå› æ­¤åŒæ ·çš„æ³•å‘é‡ä¸ä¼šé‡å¤å‡ºç°åœ¨æ­¤ç‚¹
+                        //å¯¹åº”çš„æ³•å‘é‡é›†åˆä¸­
                         hsn.add(new Normal(vNormal[0], vNormal[1], vNormal[2]));
-                        //½«¼¯ºÏ·Å½øHsahMapÖĞ
+                        //å°†é›†åˆæ”¾è¿›HsahMapä¸­
                         hmn.put(tempInxex, hsn);
                     }
 
-                    //½«Èı½ÇĞÎ3¸ö¶¥µãµÄÎÆÀí×ø±êÊı¾İ×éÖ¯µ½½á¹ûÎÆÀí×ø±êÁĞ±íÖĞ
-                    int indexTex = Integer.parseInt(tempsa[1].split("/")[1]) - 1;//»ñÈ¡ÎÆÀí×ø±ê±àºÅ
-                    //µÚ0¸ö¶¥µãµÄÎÆÀí×ø±ê
+                    //å°†ä¸‰è§’å½¢3ä¸ªé¡¶ç‚¹çš„çº¹ç†åæ ‡æ•°æ®ç»„ç»‡åˆ°ç»“æœçº¹ç†åæ ‡åˆ—è¡¨ä¸­
+                    int indexTex = Integer.parseInt(tempsa[1].split("/")[1]) - 1;//è·å–çº¹ç†åæ ‡ç¼–å·
+                    //ç¬¬0ä¸ªé¡¶ç‚¹çš„çº¹ç†åæ ‡
                     altResult.add(alt.get(indexTex * 2));
                     altResult.add(alt.get(indexTex * 2 + 1));
 
-                    indexTex = Integer.parseInt(tempsa[2].split("/")[1]) - 1;//»ñÈ¡ÎÆÀí×ø±ê±àºÅ
-                    //µÚ1¸ö¶¥µãµÄÎÆÀí×ø±ê
+                    indexTex = Integer.parseInt(tempsa[2].split("/")[1]) - 1;//è·å–çº¹ç†åæ ‡ç¼–å·
+                    //ç¬¬1ä¸ªé¡¶ç‚¹çš„çº¹ç†åæ ‡
                     altResult.add(alt.get(indexTex * 2));
                     altResult.add(alt.get(indexTex * 2 + 1));
 
-                    indexTex = Integer.parseInt(tempsa[3].split("/")[1]) - 1;//»ñÈ¡ÎÆÀí×ø±ê±àºÅ
-                    //µÚ2¸ö¶¥µãµÄÎÆÀí×ø±ê
+                    indexTex = Integer.parseInt(tempsa[3].split("/")[1]) - 1;//è·å–çº¹ç†åæ ‡ç¼–å·
+                    //ç¬¬2ä¸ªé¡¶ç‚¹çš„çº¹ç†åæ ‡
                     altResult.add(alt.get(indexTex * 2));
                     altResult.add(alt.get(indexTex * 2 + 1));
                 }
             }
 
-            //Éú³É¶¥µãÊı×é
+            //ç”Ÿæˆé¡¶ç‚¹æ•°ç»„
             int size = alvResult.size();
             float[] vXYZ = new float[size];
             for (int i = 0; i < size; i++) {
                 vXYZ[i] = alvResult.get(i);
             }
 
-            //Éú³É·¨ÏòÁ¿Êı×é
+            //ç”Ÿæˆæ³•å‘é‡æ•°ç»„
             float[] nXYZ = new float[alFaceIndex.size() * 3];
             int c = 0;
             for (Integer i : alFaceIndex) {
-                //¸ù¾İµ±Ç°µãµÄË÷Òı´ÓMapÖĞÈ¡³öÒ»¸ö·¨ÏòÁ¿µÄ¼¯ºÏ
+                //æ ¹æ®å½“å‰ç‚¹çš„ç´¢å¼•ä»Mapä¸­å–å‡ºä¸€ä¸ªæ³•å‘é‡çš„é›†åˆ
                 HashSet<Normal> hsn = hmn.get(i);
-                //Çó³öÆ½¾ù·¨ÏòÁ¿
+                //æ±‚å‡ºå¹³å‡æ³•å‘é‡
                 float[] tn = Normal.getAverage(hsn);
-                //½«¼ÆËã³öµÄÆ½¾ù·¨ÏòÁ¿´æ·Åµ½·¨ÏòÁ¿Êı×éÖĞ
+                //å°†è®¡ç®—å‡ºçš„å¹³å‡æ³•å‘é‡å­˜æ”¾åˆ°æ³•å‘é‡æ•°ç»„ä¸­
                 nXYZ[c++] = tn[0];
                 nXYZ[c++] = tn[1];
                 nXYZ[c++] = tn[2];
             }
 
-            //Éú³ÉÎÆÀíÊı×é
+            //ç”Ÿæˆçº¹ç†æ•°ç»„
             size = altResult.size();
-            float[] tST = new float[size];//ÓÃÓÚ´æ·Å½á¹ûÎÆÀí×ø±êÊı¾İµÄÊı×é
-            for (int i = 0; i < size; i++) {//½«ÎÆÀí×ø±êÊı¾İ´æÈëÊı×é
+            float[] tST = new float[size];//ç”¨äºå­˜æ”¾ç»“æœçº¹ç†åæ ‡æ•°æ®çš„æ•°ç»„
+            for (int i = 0; i < size; i++) {//å°†çº¹ç†åæ ‡æ•°æ®å­˜å…¥æ•°ç»„
                 tST[i] = altResult.get(i);
             }
             initVertexData(vXYZ,nXYZ,tST);
@@ -204,39 +204,39 @@ public class Model extends Object3D{
     }
 
     public void initVertexData(float[] vertices,float[] normals,float texCoors[]) {
-        //¶¥µã×ø±êÊı¾İµÄ³õÊ¼»¯
+        //é¡¶ç‚¹åæ ‡æ•°æ®çš„åˆå§‹åŒ–
         vCount=vertices.length/3;
-        //´´½¨¶¥µã×ø±êÊı¾İ»º³å
-        //vertices.length*4ÊÇÒòÎªÒ»¸öÕûÊıËÄ¸ö×Ö½Ú
+        //åˆ›å»ºé¡¶ç‚¹åæ ‡æ•°æ®ç¼“å†²
+        //vertices.length*4æ˜¯å› ä¸ºä¸€ä¸ªæ•´æ•°å››ä¸ªå­—èŠ‚
         ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length*4);
-        vbb.order(ByteOrder.nativeOrder());//ÉèÖÃ×Ö½ÚË³Ğò
-        mVertexBuffer = vbb.asFloatBuffer();//×ª»»ÎªFloatĞÍ»º³å
-        mVertexBuffer.put(vertices);//Ïò»º³åÇøÖĞ·ÅÈë¶¥µã×ø±êÊı¾İ
-        mVertexBuffer.position(0);//ÉèÖÃ»º³åÇøÆğÊ¼Î»ÖÃ
+        vbb.order(ByteOrder.nativeOrder());//è®¾ç½®å­—èŠ‚é¡ºåº
+        mVertexBuffer = vbb.asFloatBuffer();//è½¬æ¢ä¸ºFloatå‹ç¼“å†²
+        mVertexBuffer.put(vertices);//å‘ç¼“å†²åŒºä¸­æ”¾å…¥é¡¶ç‚¹åæ ‡æ•°æ®
+        mVertexBuffer.position(0);//è®¾ç½®ç¼“å†²åŒºèµ·å§‹ä½ç½®
 
-        //¶¥µã·¨ÏòÁ¿Êı¾İµÄ³õÊ¼»¯
+        //é¡¶ç‚¹æ³•å‘é‡æ•°æ®çš„åˆå§‹åŒ–
         ByteBuffer cbb = ByteBuffer.allocateDirect(normals.length*4);
-        cbb.order(ByteOrder.nativeOrder());//ÉèÖÃ×Ö½ÚË³Ğò
-        mNormalBuffer = cbb.asFloatBuffer();//×ª»»ÎªFloatĞÍ»º³å
-        mNormalBuffer.put(normals);//Ïò»º³åÇøÖĞ·ÅÈë¶¥µã·¨ÏòÁ¿Êı¾İ
-        mNormalBuffer.position(0);//ÉèÖÃ»º³åÇøÆğÊ¼Î»ÖÃ
+        cbb.order(ByteOrder.nativeOrder());//è®¾ç½®å­—èŠ‚é¡ºåº
+        mNormalBuffer = cbb.asFloatBuffer();//è½¬æ¢ä¸ºFloatå‹ç¼“å†²
+        mNormalBuffer.put(normals);//å‘ç¼“å†²åŒºä¸­æ”¾å…¥é¡¶ç‚¹æ³•å‘é‡æ•°æ®
+        mNormalBuffer.position(0);//è®¾ç½®ç¼“å†²åŒºèµ·å§‹ä½ç½®
 
-        //¶¥µãÎÆÀí×ø±êÊı¾İµÄ³õÊ¼»¯
+        //é¡¶ç‚¹çº¹ç†åæ ‡æ•°æ®çš„åˆå§‹åŒ–
         ByteBuffer tbb = ByteBuffer.allocateDirect(texCoors.length*4);
-        tbb.order(ByteOrder.nativeOrder());//ÉèÖÃ×Ö½ÚË³Ğò
-        mTexCoorBuffer = tbb.asFloatBuffer();//×ª»»ÎªFloatĞÍ»º³å
-        mTexCoorBuffer.put(texCoors);//Ïò»º³åÇøÖĞ·ÅÈë¶¥µãÎÆÀí×ø±êÊı¾İ
-        mTexCoorBuffer.position(0);//ÉèÖÃ»º³åÇøÆğÊ¼Î»ÖÃ
+        tbb.order(ByteOrder.nativeOrder());//è®¾ç½®å­—èŠ‚é¡ºåº
+        mTexCoorBuffer = tbb.asFloatBuffer();//è½¬æ¢ä¸ºFloatå‹ç¼“å†²
+        mTexCoorBuffer.put(texCoors);//å‘ç¼“å†²åŒºä¸­æ”¾å…¥é¡¶ç‚¹çº¹ç†åæ ‡æ•°æ®
+        mTexCoorBuffer.position(0);//è®¾ç½®ç¼“å†²åŒºèµ·å§‹ä½ç½®
     }
 
     public void initTexture(int drawableId, Resources resources){
-        //Éú³ÉÎÆÀíID
+        //ç”Ÿæˆçº¹ç†ID
         int[] textures = new int[1];
         GLES30.glGenTextures
                 (
-                        1,          //²úÉúµÄÎÆÀíidµÄÊıÁ¿
-                        textures,   //ÎÆÀíidµÄÊı×é
-                        0           //Æ«ÒÆÁ¿
+                        1,          //äº§ç”Ÿçš„çº¹ç†idçš„æ•°é‡
+                        textures,   //çº¹ç†idçš„æ•°ç»„
+                        0           //åç§»é‡
                 );
         int textureId=textures[0];
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId);
@@ -245,7 +245,7 @@ public class Model extends Object3D{
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S,GLES30.GL_REPEAT);
         GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T,GLES30.GL_REPEAT);
 
-        //Í¨¹ıÊäÈëÁ÷¼ÓÔØÍ¼Æ¬===============begin===================
+        //é€šè¿‡è¾“å…¥æµåŠ è½½å›¾ç‰‡===============begin===================
         InputStream is = resources.openRawResource(drawableId);
         Bitmap bitmapTmp;
         try
@@ -263,47 +263,47 @@ public class Model extends Object3D{
                 e.printStackTrace();
             }
         }
-        //Í¨¹ıÊäÈëÁ÷¼ÓÔØÍ¼Æ¬===============end=====================
+        //é€šè¿‡è¾“å…¥æµåŠ è½½å›¾ç‰‡===============end=====================
         GLUtils.texImage2D
                 (
-                        GLES30.GL_TEXTURE_2D, //ÎÆÀíÀàĞÍ
+                        GLES30.GL_TEXTURE_2D, //çº¹ç†ç±»å‹
                         0,
                         GLUtils.getInternalFormat(bitmapTmp),
-                        bitmapTmp, //ÎÆÀíÍ¼Ïñ
+                        bitmapTmp, //çº¹ç†å›¾åƒ
                         GLUtils.getType(bitmapTmp),
-                        0 //ÎÆÀí±ß¿ò³ß´ç
+                        0 //çº¹ç†è¾¹æ¡†å°ºå¯¸
                 );
-        bitmapTmp.recycle(); 		  //ÎÆÀí¼ÓÔØ³É¹¦ºóÊÍ·ÅÍ¼Æ¬
+        bitmapTmp.recycle(); 		  //çº¹ç†åŠ è½½æˆåŠŸåé‡Šæ”¾å›¾ç‰‡
         texId = textureId;
     }
 
     public void draw(Shader shader, Camera camera) {
-        //½«×îÖÕ±ä»»¾ØÕó´«Èë×ÅÉ«Æ÷³ÌĞò
+        //å°†æœ€ç»ˆå˜æ¢çŸ©é˜µä¼ å…¥ç€è‰²å™¨ç¨‹åº
         float[] mMVPMatrix=new float[16];
         Matrix.multiplyMM(mMVPMatrix, 0, camera.mVMatrix, 0, currMatrix, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, camera.mProjMatrix, 0, mMVPMatrix, 0);
         shader.setMat4f("uMVPMatrix", mMVPMatrix);
-        //½«Î»ÖÃ¡¢Ğı×ª±ä»»¾ØÕó´«Èë×ÅÉ«Æ÷³ÌĞò
+        //å°†ä½ç½®ã€æ—‹è½¬å˜æ¢çŸ©é˜µä¼ å…¥ç€è‰²å™¨ç¨‹åº
         shader.setMat4f("uMMatrix", currMatrix);
-        // ½«¶¥µãÎ»ÖÃÊı¾İ´«ÈëäÖÈ¾¹ÜÏß
+        // å°†é¡¶ç‚¹ä½ç½®æ•°æ®ä¼ å…¥æ¸²æŸ“ç®¡çº¿
         shader.setPointer3f("aPosition",false, mVertexBuffer);
-        //½«¶¥µã·¨ÏòÁ¿Êı¾İ´«ÈëäÖÈ¾¹ÜÏß
+        //å°†é¡¶ç‚¹æ³•å‘é‡æ•°æ®ä¼ å…¥æ¸²æŸ“ç®¡çº¿
         shader.setPointer3f("aNormal",false, mNormalBuffer);
-        //½«¶¥µãÎÆÀí×ø±êÊı¾İ´«ÈëäÖÈ¾¹ÜÏß
+        //å°†é¡¶ç‚¹çº¹ç†åæ ‡æ•°æ®ä¼ å…¥æ¸²æŸ“ç®¡çº¿
         shader.setPointer2f("aTexCoor", false, mTexCoorBuffer);
-        //½«´Ö²Ú¶È´«Èë×ÅÉ«Æ÷³ÌĞò
+        //å°†ç²—ç³™åº¦ä¼ å…¥ç€è‰²å™¨ç¨‹åº
         shader.setFloat("uShininess", shininess);
-        //°ó¶¨ÎÆÀí
-        GLES30.glActiveTexture(GLES30.GL_TEXTURE0);//ÆôÓÃ0ºÅÎÆÀí
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId);//°ó¶¨ÎÆÀí
-        //»æÖÆ¼ÓÔØµÄÎïÌå
+        //ç»‘å®šçº¹ç†
+        GLES30.glActiveTexture(GLES30.GL_TEXTURE0);//å¯ç”¨0å·çº¹ç†
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId);//ç»‘å®šçº¹ç†
+        //ç»˜åˆ¶åŠ è½½çš„ç‰©ä½“
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vCount);
     }
 
-    //ÇóÁ½¸öÏòÁ¿µÄ²æ»ı
+    //æ±‚ä¸¤ä¸ªå‘é‡çš„å‰ç§¯
     public static float[] getCrossProduct(float x1,float y1,float z1,float x2,float y2,float z2)
     {
-        //Çó³öÁ½¸öÊ¸Á¿²æ»ıÊ¸Á¿ÔÚXYZÖáµÄ·ÖÁ¿ABC
+        //æ±‚å‡ºä¸¤ä¸ªçŸ¢é‡å‰ç§¯çŸ¢é‡åœ¨XYZè½´çš„åˆ†é‡ABC
         float A=y1*z2-y2*z1;
         float B=z1*x2-z2*x1;
         float C=x1*y2-x2*y1;
@@ -311,10 +311,10 @@ public class Model extends Object3D{
         return new float[]{A,B,C};
     }
 
-    //ÏòÁ¿¹æ¸ñ»¯
+    //å‘é‡è§„æ ¼åŒ–
     public static float[] vectorNormal(float[] vector)
     {
-        //ÇóÏòÁ¿µÄÄ£
+        //æ±‚å‘é‡çš„æ¨¡
         float module=(float)Math.sqrt(vector[0]*vector[0]+vector[1]*vector[1]+vector[2]*vector[2]);
         return new float[]{vector[0]/module,vector[1]/module,vector[2]/module};
     }
