@@ -74,6 +74,15 @@ class MySurfaceView extends GLSurfaceView
         mPreviousX = x;//记录触控笔位置
         return true;
     }
+    public void moveObject(long[] dis){
+	    model.translate(dis[0], dis[1], dis[2]);
+    }
+
+    public void moveCamera(float x, float y, float z){
+	    if(camera != null){
+            camera.translate(x, y, z);
+        }
+    }
 
     public void moveObjectLeft(){
 	    model.translate(-1,0,0);

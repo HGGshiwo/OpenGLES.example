@@ -4,7 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar seekBarSpecular;
     private SeekBar seekBarShininess;
 
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private SensorListener sensorListener;
+
+    private float[] v;
+    long lastTime;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,23 +61,67 @@ public class MainActivity extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        mode = Mode.CAMERA;
+        lastTime = System.currentTimeMillis();
+        v = new float[]{0,0,0};
+
+        initView();
+        initInterface();
+        initSensor();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mGLSurfaceView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGLSurfaceView.onPause();
+    }
+
+    public void chooseLight(View v){
+        mode = Mode.LIGHT;
+        objectSetting.setVisibility(View.GONE);
+        lightSetting.setVisibility(View.VISIBLE);
+    }
+
+    public void chooseObject(View v){
+        mode = Mode.OBJECT;
+        lightSetting.setVisibility(View.GONE);
+        objectSetting.setVisibility(View.VISIBLE);
+    }
+
+    public void chooseOK(View v){
+        objectSetting.setVisibility(View.GONE);
+        lightSetting.setVisibility(View.GONE);
+        mode = Mode.CAMERA;
+    }
+
+    private void initView(){
+
         mGLSurfaceView = new MySurfaceView(this);
         setContentView(mGLSurfaceView);
         addContentView(
-            View.inflate(this, R.layout.view_layout,null),
-            new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+                View.inflate(this, R.layout.view_layout,null),
+                new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         );
 
         mGLSurfaceView.requestFocus();
         mGLSurfaceView.setFocusableInTouchMode(true);
 
+
+    }
+
+    private void initInterface(){
         objectSetting = findViewById(R.id.CardView_object);
         objectSetting.setVisibility(View.GONE);
 
         lightSetting = findViewById(R.id.CardView_light);
         lightSetting.setVisibility(View.GONE);
 
-        mode = Mode.CAMERA;
 
         class MovingThread extends Thread{
             @Override
@@ -251,34 +307,41 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mGLSurfaceView.onResume();
+    private void initSensor(){
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorListener = new SensorListener();
+        sensorManager.registerListener(sensorListener,accelerometer,SensorManager.SENSOR_DELAY_UI);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mGLSurfaceView.onPause();
-    }
+    class SensorListener implements SensorEventListener{
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            long time = System.currentTimeMillis();
+            float dt = time - lastTime;
+            float []x = new float[3];
+            float [] a = normalizeAccelerate(event.values[0], event.values[1], event.values[2]);
+            for(int i = 0; i < 3; i++){
+                float curV = a[i] * dt;
+                x[i] = (float) ((curV+v[i])*dt*0.0000000001);
+            }
+            mGLSurfaceView.moveCamera(x[0], x[1], x[2]);
+            System.out.println(event.values[0]);
+            System.out.println(event.values[1]);
+            System.out.println(event.values[2]);
+        }
 
-    public void chooseLight(View v){
-        mode = Mode.LIGHT;
-        objectSetting.setVisibility(View.GONE);
-        lightSetting.setVisibility(View.VISIBLE);
-    }
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    public void chooseObject(View v){
-        mode = Mode.OBJECT;
-        lightSetting.setVisibility(View.GONE);
-        objectSetting.setVisibility(View.VISIBLE);
+        }
     }
-
-    public void chooseOK(View v){
-        objectSetting.setVisibility(View.GONE);
-        lightSetting.setVisibility(View.GONE);
-        mode = Mode.CAMERA;
+    private float[] normalizeAccelerate(float x, float y, float z){
+        float[] res = new float[3];
+        res[0] = x > 9 ? (float) (x - 9.81) : (float) (x < -9 ? x + 9.81 : x);
+        res[1] = y > 9 ? (float) (y - 9.81) : (float) (y < -9 ? y + 9.81 : y);
+        res[2] = z > 9 ? (float) (z - 9.81) : (float) (z < -9 ? z + 9.81 : z);
+        return res;
     }
 }
 
