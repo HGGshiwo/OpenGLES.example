@@ -8,7 +8,7 @@ import android.content.res.Resources;
 import android.opengl.GLES30;
 import android.util.Log;
 
-//åŠ è½½é¡¶ç‚¹Shaderä¸ç‰‡å…ƒShaderçš„å·¥å…·ç±»
+//¼ÓÔØ¶¥µãShaderÓëÆ¬ÔªShaderµÄ¹¤¾ßÀà
 public class Shader
 {
     private final int id;
@@ -18,8 +18,8 @@ public class Shader
    }
 
    public Shader(
-           String mVertexShaderFile,//é¡¶ç‚¹ç€è‰²å™¨ä»£ç è„šæœ¬
-           String mFragmentShaderFile,//ç‰‡å…ƒç€è‰²å™¨ä»£ç è„šæœ¬
+           String mVertexShaderFile,//¶¥µã×ÅÉ«Æ÷´úÂë½Å±¾
+           String mFragmentShaderFile,//Æ¬Ôª×ÅÉ«Æ÷´úÂë½Å±¾
            Resources resources
    ) {
         String mVertexShader = loadFromAssetsFile(mVertexShaderFile, resources);
@@ -27,26 +27,26 @@ public class Shader
         id = createProgram(mVertexShader, mFragmentShader);
    }
 
-    //åŠ è½½åˆ¶å®šshaderçš„æ–¹æ³•
+    //¼ÓÔØÖÆ¶¨shaderµÄ·½·¨
     public static int loadShader(
-            int shaderType, //shaderçš„ç±»å‹  GLES30.GL_VERTEX_SHADER   GLES30.GL_FRAGMENT_SHADER
-            String source   //shaderçš„è„šæœ¬å­—ç¬¦ä¸²
+            int shaderType, //shaderµÄÀàĞÍ  GLES30.GL_VERTEX_SHADER   GLES30.GL_FRAGMENT_SHADER
+            String source   //shaderµÄ½Å±¾×Ö·û´®
     ) {
-        //åˆ›å»ºä¸€ä¸ªæ–°shader
+        //´´½¨Ò»¸öĞÂshader
         int shader = GLES30.glCreateShader(shaderType);
-        //è‹¥åˆ›å»ºæˆåŠŸåˆ™åŠ è½½shader
+        //Èô´´½¨³É¹¦Ôò¼ÓÔØshader
         if (shader != 0)
         {
-            //åŠ è½½shaderçš„æºä»£ç 
+            //¼ÓÔØshaderµÄÔ´´úÂë
             GLES30.glShaderSource(shader, source);
-            //ç¼–è¯‘shader
+            //±àÒëshader
             GLES30.glCompileShader(shader);
-            //å­˜æ”¾ç¼–è¯‘æˆåŠŸshaderæ•°é‡çš„æ•°ç»„
+            //´æ·Å±àÒë³É¹¦shaderÊıÁ¿µÄÊı×é
             int[] compiled = new int[1];
-            //è·å–Shaderçš„ç¼–è¯‘æƒ…å†µ
+            //»ñÈ¡ShaderµÄ±àÒëÇé¿ö
             GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, compiled, 0);
             if (compiled[0] == 0)
-            {//è‹¥ç¼–è¯‘å¤±è´¥åˆ™æ˜¾ç¤ºé”™è¯¯æ—¥å¿—å¹¶åˆ é™¤æ­¤shader
+            {//Èô±àÒëÊ§°ÜÔòÏÔÊ¾´íÎóÈÕÖ¾²¢É¾³ı´Ëshader
                 Log.e("ES30_ERROR", "Could not compile shader " + shaderType + ":");
                 Log.e("ES30_ERROR", GLES30.glGetShaderInfoLog(shader));
                 GLES30.glDeleteShader(shader);
@@ -56,40 +56,40 @@ public class Shader
         return shader;
     }
 
-   //åˆ›å»ºshaderç¨‹åºçš„æ–¹æ³•
+   //´´½¨shader³ÌĞòµÄ·½·¨
    public int createProgram(String vertexSource, String fragmentSource) {
-	    //åŠ è½½é¡¶ç‚¹ç€è‰²å™¨
+	    //¼ÓÔØ¶¥µã×ÅÉ«Æ÷
         int vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertexSource);
         if (vertexShader == 0) 
         {
             return 0;
         }
         
-        //åŠ è½½ç‰‡å…ƒç€è‰²å™¨
+        //¼ÓÔØÆ¬Ôª×ÅÉ«Æ÷
         int pixelShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentSource);
         if (pixelShader == 0) 
         {
             return 0;
         }
 
-        //åˆ›å»ºç¨‹åº
+        //´´½¨³ÌĞò
         int program = GLES30.glCreateProgram();
-        //è‹¥ç¨‹åºåˆ›å»ºæˆåŠŸåˆ™å‘ç¨‹åºä¸­åŠ å…¥é¡¶ç‚¹ç€è‰²å™¨ä¸ç‰‡å…ƒç€è‰²å™¨
+        //Èô³ÌĞò´´½¨³É¹¦ÔòÏò³ÌĞòÖĞ¼ÓÈë¶¥µã×ÅÉ«Æ÷ÓëÆ¬Ôª×ÅÉ«Æ÷
         if (program != 0) 
         {
-        	//å‘ç¨‹åºä¸­åŠ å…¥é¡¶ç‚¹ç€è‰²å™¨
+        	//Ïò³ÌĞòÖĞ¼ÓÈë¶¥µã×ÅÉ«Æ÷
             GLES30.glAttachShader(program, vertexShader);
             checkGlError("glAttachShader");
-            //å‘ç¨‹åºä¸­åŠ å…¥ç‰‡å…ƒç€è‰²å™¨
+            //Ïò³ÌĞòÖĞ¼ÓÈëÆ¬Ôª×ÅÉ«Æ÷
             GLES30.glAttachShader(program, pixelShader);
             checkGlError("glAttachShader");
-            //é“¾æ¥ç¨‹åº
+            //Á´½Ó³ÌĞò
             GLES30.glLinkProgram(program);
-            //å­˜æ”¾é“¾æ¥æˆåŠŸprogramæ•°é‡çš„æ•°ç»„
+            //´æ·ÅÁ´½Ó³É¹¦programÊıÁ¿µÄÊı×é
             int[] linkStatus = new int[1];
-            //è·å–programçš„é“¾æ¥æƒ…å†µ
+            //»ñÈ¡programµÄÁ´½ÓÇé¿ö
             GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, linkStatus, 0);
-            //è‹¥é“¾æ¥å¤±è´¥åˆ™æŠ¥é”™å¹¶åˆ é™¤ç¨‹åº
+            //ÈôÁ´½ÓÊ§°ÜÔò±¨´í²¢É¾³ı³ÌĞò
             if (linkStatus[0] != GLES30.GL_TRUE) 
             {
                 Log.e("ES30_ERROR", "Could not link program: ");
@@ -101,7 +101,7 @@ public class Shader
         return program;
     }
     
-   //æ£€æŸ¥æ¯ä¸€æ­¥æ“ä½œæ˜¯å¦æœ‰é”™è¯¯çš„æ–¹æ³• 
+   //¼ì²éÃ¿Ò»²½²Ù×÷ÊÇ·ñÓĞ´íÎóµÄ·½·¨ 
    public static void checkGlError(String op) {
         int error;
         while ((error = GLES30.glGetError()) != GLES30.GL_NO_ERROR) 
@@ -111,7 +111,7 @@ public class Shader
         }
    }
    
-   //ä»shè„šæœ¬ä¸­åŠ è½½shaderå†…å®¹çš„æ–¹æ³•
+   //´Ósh½Å±¾ÖĞ¼ÓÔØshaderÄÚÈİµÄ·½·¨
    public static String loadFromAssetsFile(String fname,Resources r) {
    	String result=null;    	
    	try

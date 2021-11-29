@@ -8,12 +8,12 @@ public class Light extends Camera{
     public float specular;
 
     public Light(
-            float left,		//nearé¢çš„left
-            float right,    //nearé¢çš„right
-            float bottom,   //nearé¢çš„bottom
-            float top,      //nearé¢çš„top
-            float near,		//nearé¢è·ç¦»
-            float far,       //faré¢è·ç¦»
+            float left,		//nearÃæµÄleft
+            float right,    //nearÃæµÄright
+            float bottom,   //nearÃæµÄbottom
+            float top,      //nearÃæµÄtop
+            float near,		//nearÃæ¾àÀë
+            float far,       //farÃæ¾àÀë
             float x,
             float y,
             float z,

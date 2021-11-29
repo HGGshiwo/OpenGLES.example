@@ -1,11 +1,11 @@
 package com.example.myapplication.Object;
 
 import java.util.Set;
-//è¡¨ç¤ºæ³•å‘é‡çš„ç±»ï¼Œæ­¤ç±»çš„ä¸€ä¸ªå¯¹è±¡è¡¨ç¤ºä¸€ä¸ªæ³•å‘é‡
+//±íÊ¾·¨ÏòÁ¿µÄÀà£¬´ËÀàµÄÒ»¸ö¶ÔÏó±íÊ¾Ò»¸ö·¨ÏòÁ¿
 public class Normal 
 {
-   public static final float DIFF=0.0000001f;//åˆ¤æ–­ä¸¤ä¸ªæ³•å‘é‡æ˜¯å¦ç›¸åŒçš„é˜ˆå€¼
-   //æ³•å‘é‡åœ¨XYZè½´ä¸Šçš„åˆ†é‡
+   public static final float DIFF=0.0000001f;//ÅĞ¶ÏÁ½¸ö·¨ÏòÁ¿ÊÇ·ñÏàÍ¬µÄãĞÖµ
+   //·¨ÏòÁ¿ÔÚXYZÖáÉÏµÄ·ÖÁ¿
    float nx;
    float ny;
    float nz;
@@ -21,7 +21,7 @@ public class Normal
    public boolean equals(Object o)
    {
 	   if(o instanceof  Normal)
-	   {//è‹¥ä¸¤ä¸ªæ³•å‘é‡XYZä¸‰ä¸ªåˆ†é‡çš„å·®éƒ½å°äºæŒ‡å®šçš„é˜ˆå€¼åˆ™è®¤ä¸ºè¿™ä¸¤ä¸ªæ³•å‘é‡ç›¸ç­‰
+	   {//ÈôÁ½¸ö·¨ÏòÁ¿XYZÈı¸ö·ÖÁ¿µÄ²î¶¼Ğ¡ÓÚÖ¸¶¨µÄãĞÖµÔòÈÏÎªÕâÁ½¸ö·¨ÏòÁ¿ÏàµÈ
 		   Normal tn=(Normal)o;
 		   if(Math.abs(nx-tn.nx)<DIFF&&
 			  Math.abs(ny-tn.ny)<DIFF&&
@@ -41,26 +41,26 @@ public class Normal
 	   }
    }
    
-   //ç”±äºè¦ç”¨åˆ°HashSetï¼Œå› æ­¤ä¸€å®šè¦é‡å†™hashCodeæ–¹æ³•
+   //ÓÉÓÚÒªÓÃµ½HashSet£¬Òò´ËÒ»¶¨ÒªÖØĞ´hashCode·½·¨
    @Override
    public int hashCode()
    {
 	   return 1;
    }
    
-   //æ±‚æ³•å‘é‡å¹³å‡å€¼çš„å·¥å…·æ–¹æ³•
+   //Çó·¨ÏòÁ¿Æ½¾ùÖµµÄ¹¤¾ß·½·¨
    public static float[] getAverage(Set<Normal> sn)
    {
-	   //å­˜æ”¾æ³•å‘é‡å’Œçš„æ•°ç»„
+	   //´æ·Å·¨ÏòÁ¿ºÍµÄÊı×é
 	   float[] result=new float[3];
-	   //æŠŠé›†åˆä¸­æ‰€æœ‰çš„æ³•å‘é‡æ±‚å’Œ
+	   //°Ñ¼¯ºÏÖĞËùÓĞµÄ·¨ÏòÁ¿ÇóºÍ
 	   for(Normal n:sn)
 	   {
 		   result[0]+=n.nx;
 		   result[1]+=n.ny;
 		   result[2]+=n.nz;
 	   }	   
-	   //å°†æ±‚å’Œåçš„æ³•å‘é‡è§„æ ¼åŒ–
+	   //½«ÇóºÍºóµÄ·¨ÏòÁ¿¹æ¸ñ»¯
 	   return Model.vectorNormal(result);
    }
 }
