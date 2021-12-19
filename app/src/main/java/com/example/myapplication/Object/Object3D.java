@@ -24,20 +24,15 @@ public class Object3D {
     public Object3D(
             float x,
             float y,
-            float z,
-            float a,
-            float rx,
-            float ry,
-            float rz
+            float z
 
     ){
         up = new float[]{0f,1f,0f};
         front = new float[]{0f,0f,-1f};
-        position = new float[]{0,0,0};
+        position = new float[]{x,y,z};
 
         currMatrix = new float[16];
-        Matrix.translateM(currMatrix,0, x, y, z);
-        Matrix.rotateM(currMatrix,0, a, rx, ry, rz);
+        Matrix.translateM(currMatrix, 0, x, y, z);//不能调用translate，因为子类重载
     }
 
     public void translate(float x,float y,float z){//设置沿xyz轴移动

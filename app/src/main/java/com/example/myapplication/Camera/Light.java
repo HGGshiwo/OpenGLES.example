@@ -16,13 +16,9 @@ public class Light extends Camera{
             float far,       //far√Êæ‡¿Î
             float x,
             float y,
-            float z,
-            float a,
-            float rx,
-            float ry,
-            float rz
+            float z
     ){
-        super(left, right, bottom, top, near, far, x, y, z, a, rx, ry, rz);
+        super(left, right, bottom, top, near, far, x, y, z);
         name = "uLight";
         ambient = 0.15f;
         diffuse = 0.9f;

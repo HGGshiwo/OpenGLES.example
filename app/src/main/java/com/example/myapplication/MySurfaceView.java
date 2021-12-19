@@ -35,7 +35,8 @@ class MySurfaceView extends GLSurfaceView
     private Shader shader;
     private Model model;
     private Model table;
-    private Camera camera;
+    private Camera rCamera;
+    private Camera lCamera;
     private Light light;
 
 	public MySurfaceView(Context context) {
@@ -98,15 +99,31 @@ class MySurfaceView extends GLSurfaceView
     public void moveCameraLeft(){
         float [] rightDistance = Model.vectorNormal(
                 Model.getCrossProduct(
-                        camera.up[0],
-                        camera.up[1],
-                        camera.up[2],
-                        camera.front[0],
-                        camera.front[1],
-                        camera.front[2]
+                        lCamera.up[0],
+                        lCamera.up[1],
+                        lCamera.up[2],
+                        lCamera.front[0],
+                        lCamera.front[1],
+                        lCamera.front[2]
                 ));
 
-        camera.translate(
+        lCamera.translate(
+                0.5f*rightDistance[0],
+                0,
+                0.5f*rightDistance[2]
+        );
+
+        rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        rCamera.up[0],
+                        rCamera.up[1],
+                        rCamera.up[2],
+                        rCamera.front[0],
+                        rCamera.front[1],
+                        rCamera.front[2]
+                ));
+
+        rCamera.translate(
                 0.5f*rightDistance[0],
                 0,
                 0.5f*rightDistance[2]
@@ -116,46 +133,78 @@ class MySurfaceView extends GLSurfaceView
     public void moveCameraRight(){
 	    float [] rightDistance = Model.vectorNormal(
 	            Model.getCrossProduct(
-	                    camera.up[0],
-                        camera.up[1],
-                        camera.up[2],
-                        camera.front[0],
-                        camera.front[1],
-                        camera.front[2]
+	                    lCamera.up[0],
+                        lCamera.up[1],
+                        lCamera.up[2],
+                        lCamera.front[0],
+                        lCamera.front[1],
+                        lCamera.front[2]
                 ));
 
-	    camera.translate(
+	    lCamera.translate(
 	            -0.5f*rightDistance[0],
+                0,
+                -0.5f*rightDistance[2]
+        );
+
+        rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        rCamera.up[0],
+                        rCamera.up[1],
+                        rCamera.up[2],
+                        rCamera.front[0],
+                        rCamera.front[1],
+                        rCamera.front[2]
+                ));
+
+        rCamera.translate(
+                -0.5f*rightDistance[0],
                 0,
                 -0.5f*rightDistance[2]
         );
 	}
 
     public void moveCameraForward(){
-	    float [] front = camera.front;
-	    camera.translate(0.5f*front[0],0,0.5f*front[2]);
+	    float [] front = lCamera.front;
+	    lCamera.translate(0.5f*front[0],0,0.5f*front[2]);
+        front = rCamera.front;
+        rCamera.translate(0.5f*front[0],0,0.5f*front[2]);
     }
 
     public void moveCameraBack(){
-        float [] front = camera.front;
-	    camera.translate(-0.5f*front[0],0,-0.5f*front[2]);
+        float [] front = lCamera.front;
+	    lCamera.translate(-0.5f*front[0],0,-0.5f*front[2]);
+        front = rCamera.front;
+        rCamera.translate(-0.5f*front[0],0,-0.5f*front[2]);
     }
 
     public void rotateCameraRight(float angle){
         float [] right = Model.vectorNormal(
                 Model.getCrossProduct(
-                        camera.up[0],
-                        camera.up[1],
-                        camera.up[2],
-                        camera.front[0],
-                        camera.front[1],
-                        camera.front[2]
+                        lCamera.up[0],
+                        lCamera.up[1],
+                        lCamera.up[2],
+                        lCamera.front[0],
+                        lCamera.front[1],
+                        lCamera.front[2]
                 ));
-        camera.rotate(angle, right[0], right[1], right[2]);
+        lCamera.rotate(angle, right[0], right[1], right[2]);
+
+        right = Model.vectorNormal(
+                Model.getCrossProduct(
+                        rCamera.up[0],
+                        rCamera.up[1],
+                        rCamera.up[2],
+                        rCamera.front[0],
+                        rCamera.front[1],
+                        rCamera.front[2]
+                ));
+        rCamera.rotate(angle, right[0], right[1], right[2]);
     }
 
     public void rotateCameraUp(float angle){
-        camera.rotate(angle, 0, 1, 0);
+        lCamera.rotate(angle, 0, 1, 0);
+        rCamera.rotate(angle, 0, 1, 0);
     }
 
     public void moveLightLeft(){
@@ -241,11 +290,13 @@ class MySurfaceView extends GLSurfaceView
             table.scale(3,3,3);
 
             //设置照相机
-            camera = new Camera(-1, 1, -1, 1, 2, 100,
-                    0,0,0,0f,0f,-1f,0f);
+            rCamera = new Camera(-1, 1, -1, 1, 2, 100,
+                    -0.5f,0,0);
+            lCamera = new Camera(-1, 1, -1, 1, 2, 100,
+                    0.5f,0,0);
             //初始化光源位置
             light = new Light(-1, 1, -1, 1, 2, 100,
-                    40,10,20,0f,0f,-1f,0f);
+                    40,10,20);
         }
 
         public void onDrawFrame(GL10 gl) 
@@ -255,7 +306,7 @@ class MySurfaceView extends GLSurfaceView
             //指定使用某套着色器程序
             shader.use();
             //将摄像机位置传入着色器程序
-            shader.setVec3f("uCamera", camera.positionBuffer);
+            shader.setVec3f("uCamera", lCamera.positionBuffer);
             //将光源位置传入着色器程序
             shader.setVec3f("uLightLocation", light.positionBuffer);
             //将环境光强度传入着色器程序
@@ -265,8 +316,10 @@ class MySurfaceView extends GLSurfaceView
             //将镜面光强度传入着色器程序
             shader.setFloat("uLightSpecular", light.specular);
             //绘制模型
-            model.draw(shader, camera);
-            table.draw(shader, camera);
+            model.draw(shader, lCamera, 0);
+            model.draw(shader, rCamera, 1);
+            table.draw(shader, lCamera, 0);
+            table.draw(shader, rCamera, 1);
         }  
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -275,7 +328,8 @@ class MySurfaceView extends GLSurfaceView
         	//计算GLSurfaceView的宽高比
             float ratio = (float) width / height;
             //调用此方法计算产生透视投影矩阵
-            camera.setProjectFrustum(-ratio, ratio, -1, 1, 2, 100);
+            rCamera.setProjectFrustum(-ratio, ratio, -1, 1, 2, 100);
+            lCamera.setProjectFrustum(-ratio, ratio, -1, 1, 2, 100);
         }
     }
 }

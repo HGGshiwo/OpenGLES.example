@@ -277,12 +277,13 @@ public class Model extends Object3D{
         texId = textureId;
     }
 
-    public void draw(Shader shader, Camera camera) {
+    public void draw(Shader shader, Camera camera, int side) {
         //将最终变换矩阵传入着色器程序
         float[] mMVPMatrix=new float[16];
         Matrix.multiplyMM(mMVPMatrix, 0, camera.mVMatrix, 0, currMatrix, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, camera.mProjMatrix, 0, mMVPMatrix, 0);
         shader.setMat4f("uMVPMatrix", mMVPMatrix);
+
         //将位置、旋转变换矩阵传入着色器程序
         shader.setMat4f("uMMatrix", currMatrix);
         // 将顶点位置数据传入渲染管线
@@ -293,6 +294,8 @@ public class Model extends Object3D{
         shader.setPointer2f("aTexCoor", false, mTexCoorBuffer);
         //将粗糙度传入着色器程序
         shader.setFloat("uShininess", shininess);
+        //将绘制绘制哪边传入着色器
+        shader.setInt("uSide", side);
         //绑定纹理
         GLES30.glActiveTexture(GLES30.GL_TEXTURE0);//启用0号纹理
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, texId);//绑定纹理

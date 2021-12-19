@@ -25,13 +25,9 @@ public class Camera extends Object3D {
             float far,       //far√Êæ‡¿Î
             float x,
             float y,
-            float z,
-            float a,
-            float rx,
-            float ry,
-            float rz
+            float z
     ){
-        super(x,y,z,a,rx,ry,rz);
+        super(x,y,z);
         mVMatrix  = new float[16];
         mProjMatrix = new float[16];
         setProjectFrustum(left,right,bottom,top,near,far);
