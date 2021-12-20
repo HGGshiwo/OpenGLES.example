@@ -27,11 +27,12 @@ import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
 
-    public enum Mode {OBJECT, LIGHT, CAMERA}
+    public enum Mode {OBJECT, LIGHT, CAMERA, Setting}
 
     private MySurfaceView mGLSurfaceView;
     private CardView objectSetting;
     private CardView lightSetting;
+    private CardView cameraSetting;
     public Mode mode;
 
     private boolean isMovingRight;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar seekBarDiffuse;
     private SeekBar seekBarSpecular;
     private SeekBar seekBarShininess;
+    private SeekBar seekBarDistance;
 
     LocationManager manager;
 
@@ -84,18 +86,28 @@ public class MainActivity extends AppCompatActivity {
     public void chooseLight(View v) {
         mode = Mode.LIGHT;
         objectSetting.setVisibility(View.GONE);
+        cameraSetting.setVisibility(View.GONE);
         lightSetting.setVisibility(View.VISIBLE);
     }
 
     public void chooseObject(View v) {
         mode = Mode.OBJECT;
         lightSetting.setVisibility(View.GONE);
+        cameraSetting.setVisibility(View.GONE);
         objectSetting.setVisibility(View.VISIBLE);
+    }
+
+    public void setCamera(View v){
+        objectSetting.setVisibility(View.GONE);
+        lightSetting.setVisibility(View.GONE);
+        cameraSetting.setVisibility(View.VISIBLE);
+        mode = Mode.Setting;
     }
 
     public void chooseOK(View v) {
         objectSetting.setVisibility(View.GONE);
         lightSetting.setVisibility(View.GONE);
+        cameraSetting.setVisibility(View.GONE);
         mode = Mode.CAMERA;
     }
 
@@ -119,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
         lightSetting = findViewById(R.id.CardView_light);
         lightSetting.setVisibility(View.GONE);
 
+        cameraSetting = findViewById(R.id.CardView_cameraSetting);
+        cameraSetting.setVisibility(View.GONE);
 
         class MovingThread extends Thread {
             @Override
@@ -318,13 +332,23 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-    }
 
-    private void initLocation() {
-        manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
+        seekBarDistance = findViewById(R.id.SeekBar_distance);
+        seekBarDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mGLSurfaceView.setDistance((float) progress/100.0f);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
     }
 
 }

@@ -2,22 +2,12 @@ package com.example.myapplication;//声明包
 import java.io.IOException;
 import java.io.InputStream;
 
-import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLES30;
-import android.opengl.GLUtils;
-import android.opengl.Matrix;
 import android.view.MotionEvent;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.view.View;
-import android.widget.Button;
-import android.widget.SeekBar;
-
-import androidx.cardview.widget.CardView;
 
 import com.example.myapplication.Camera.Camera;
 import com.example.myapplication.Camera.Light;
@@ -38,6 +28,7 @@ class MySurfaceView extends GLSurfaceView
     private Camera rCamera;
     private Camera lCamera;
     private Light light;
+    private float lastDistance;
 
 	public MySurfaceView(Context context) {
         super(context);
@@ -45,6 +36,7 @@ class MySurfaceView extends GLSurfaceView
         mRenderer = new SceneRenderer();	//创建场景渲染器
         setRenderer(mRenderer);				//设置渲染器		        
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);//设置渲染模式为主动渲染
+	    lastDistance = 0.5f;
 	}
 	
 	//触摸事件回调方法
@@ -108,41 +100,7 @@ class MySurfaceView extends GLSurfaceView
                 ));
 
         lCamera.translate(
-                0.5f*rightDistance[0],
-                0,
-                0.5f*rightDistance[2]
-        );
-
-        rightDistance = Model.vectorNormal(
-                Model.getCrossProduct(
-                        rCamera.up[0],
-                        rCamera.up[1],
-                        rCamera.up[2],
-                        rCamera.front[0],
-                        rCamera.front[1],
-                        rCamera.front[2]
-                ));
-
-        rCamera.translate(
-                0.5f*rightDistance[0],
-                0,
-                0.5f*rightDistance[2]
-        );
-    }
-
-    public void moveCameraRight(){
-	    float [] rightDistance = Model.vectorNormal(
-	            Model.getCrossProduct(
-	                    lCamera.up[0],
-                        lCamera.up[1],
-                        lCamera.up[2],
-                        lCamera.front[0],
-                        lCamera.front[1],
-                        lCamera.front[2]
-                ));
-
-	    lCamera.translate(
-	            -0.5f*rightDistance[0],
+                -0.5f*rightDistance[0],
                 0,
                 -0.5f*rightDistance[2]
         );
@@ -162,7 +120,77 @@ class MySurfaceView extends GLSurfaceView
                 0,
                 -0.5f*rightDistance[2]
         );
+    }
+
+    public void moveCameraRight(){
+	    float [] rightDistance = Model.vectorNormal(
+	            Model.getCrossProduct(
+	                    lCamera.up[0],
+                        lCamera.up[1],
+                        lCamera.up[2],
+                        lCamera.front[0],
+                        lCamera.front[1],
+                        lCamera.front[2]
+                ));
+
+	    lCamera.translate(
+	            0.5f*rightDistance[0],
+                0,
+                0.5f*rightDistance[2]
+        );
+
+        rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        rCamera.up[0],
+                        rCamera.up[1],
+                        rCamera.up[2],
+                        rCamera.front[0],
+                        rCamera.front[1],
+                        rCamera.front[2]
+                ));
+
+        rCamera.translate(
+                0.5f*rightDistance[0],
+                0,
+                0.5f*rightDistance[2]
+        );
 	}
+
+	public void setDistance(float distance){
+	    float deltaDistance = distance-lastDistance;
+        float [] rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        lCamera.up[0],
+                        lCamera.up[1],
+                        lCamera.up[2],
+                        lCamera.front[0],
+                        lCamera.front[1],
+                        lCamera.front[2]
+                ));
+
+        lCamera.translate(
+                -deltaDistance*rightDistance[0],
+                0,
+                -deltaDistance*rightDistance[2]
+        );
+
+        rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        rCamera.up[0],
+                        rCamera.up[1],
+                        rCamera.up[2],
+                        rCamera.front[0],
+                        rCamera.front[1],
+                        rCamera.front[2]
+                ));
+
+        rCamera.translate(
+                deltaDistance*rightDistance[0],
+                0,
+                deltaDistance*rightDistance[2]
+        );
+        lastDistance = distance;
+    }
 
     public void moveCameraForward(){
 	    float [] front = lCamera.front;
@@ -179,6 +207,7 @@ class MySurfaceView extends GLSurfaceView
     }
 
     public void rotateCameraRight(float angle){
+
         float [] right = Model.vectorNormal(
                 Model.getCrossProduct(
                         lCamera.up[0],
@@ -189,7 +218,6 @@ class MySurfaceView extends GLSurfaceView
                         lCamera.front[2]
                 ));
         lCamera.rotate(angle, right[0], right[1], right[2]);
-
         right = Model.vectorNormal(
                 Model.getCrossProduct(
                         rCamera.up[0],
@@ -203,8 +231,19 @@ class MySurfaceView extends GLSurfaceView
     }
 
     public void rotateCameraUp(float angle){
+	    float radians = (float) Math.toRadians(angle);
         lCamera.rotate(angle, 0, 1, 0);
+        lCamera.translate(
+                lastDistance-lastDistance*(float)Math.cos(radians),
+                0,
+                lastDistance*(float)Math.sin(radians)
+        );
         rCamera.rotate(angle, 0, 1, 0);
+        rCamera.translate(
+                -lastDistance+lastDistance*(float)Math.cos(radians),
+                0,
+                -lastDistance*(float)Math.sin(radians)
+        );
     }
 
     public void moveLightLeft(){
