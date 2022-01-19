@@ -97,4 +97,32 @@ public class Camera extends Object3D {
         setPositionBuffer();
         setLookAt();
     }
+
+    @Override
+    public void moveForward(float x){
+        super.moveForward(x);
+        setPositionBuffer();
+        setLookAt();
+    }
+
+    @Override
+    public void moveLeft(float x){
+        super.moveLeft(x);
+        setPositionBuffer();
+        setLookAt();
+    }
+
+    @Override
+    public void rotateRight(float angle){
+        super.rotateRight(angle);
+        setPositionBuffer();
+        setLookAt();
+    }
+
+    @Override
+    public void rotateUp(float angle){
+        super.rotateUp(angle);
+        setPositionBuffer();
+        setLookAt();
+    }
 }

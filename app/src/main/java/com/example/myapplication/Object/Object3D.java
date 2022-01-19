@@ -42,6 +42,48 @@ public class Object3D {
         position[2]+=z;
     }
 
+    public void moveForward(float x){
+        float [] front = this.front;
+        this.translate(-1*x*front[0],0,-1*x*front[2]);
+    }
+
+    public void moveLeft(float x){
+        float [] rightDistance = Model.vectorNormal(
+                Model.getCrossProduct(
+                        up[0],
+                        up[1],
+                        up[2],
+                        front[0],
+                        front[1],
+                        front[2]
+                ));
+
+        translate(
+                x*rightDistance[0],
+                0,
+                x*rightDistance[2]
+        );
+    }
+
+    public void rotateRight(float angle){
+        float [] right = Model.vectorNormal(
+                Model.getCrossProduct(
+                        up[0],
+                        up[1],
+                        up[2],
+                        front[0],
+                        front[1],
+                        front[2]
+                ));
+        rotate(angle, right[0], right[1], right[2]);
+    }
+
+    public void rotateUp(float angle){
+        float radians = (float) Math.toRadians(angle);
+        rotate(angle, 0, 1, 0);
+    }
+
+
     public void scale(float x,float y,float z){
         Matrix.scaleM(currMatrix,0,x,y,z);
     }
